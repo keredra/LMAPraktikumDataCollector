@@ -24,10 +24,10 @@ class LocationRecorder {
          */
         locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        model.settings.location.observe(activity, Observer {
-            stop()
-            start()
-        })
+//        model.settings.location.observe(activity, Observer {
+//            stop()
+//            start()
+//        })
     }
 
     private val locationListener = LocationListener { location ->

@@ -5,7 +5,7 @@ import org.json.JSONObject
 
 data class SettingCollection(
     var location: MutableLiveData<Location> = MutableLiveData<Location>(Location(true, true, 0, 0.0f)),
-    var googleMaps: MutableLiveData<GoogleMaps> = MutableLiveData<GoogleMaps>(GoogleMaps(13.0f, true, 10000))
+    var googleMaps: MutableLiveData<GoogleMaps> = MutableLiveData<GoogleMaps>(GoogleMaps(17.0f, true, 10000))
 ) {
 
     companion object {
