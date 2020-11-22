@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package de.krd.lmapraktikum_datacollector.recorder
 
 import android.Manifest
@@ -7,19 +9,19 @@ import android.content.SharedPreferences
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.preference.PreferenceManager
 import android.util.Log
 import androidx.lifecycle.Observer
-import androidx.preference.PreferenceManager
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 
 class LocationRecorder {
     private var run = false;
-    private lateinit var activity: PermissionActivity
+    private var activity: PermissionActivity
     private lateinit var model: GlobalModel
-    private lateinit var locationManager: LocationManager
-    private lateinit var preferences: SharedPreferences
+    private var locationManager: LocationManager
+    private var preferences: SharedPreferences
 
     constructor(activity: PermissionActivity, model: GlobalModel) {
         this.activity = activity;

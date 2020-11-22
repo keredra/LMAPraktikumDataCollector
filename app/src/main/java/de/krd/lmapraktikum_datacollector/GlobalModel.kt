@@ -8,6 +8,4 @@ import org.json.JSONObject
 class GlobalModel : ViewModel() {
     val data = DataCollection()
     val settings = SettingCollection()
-
-
 }

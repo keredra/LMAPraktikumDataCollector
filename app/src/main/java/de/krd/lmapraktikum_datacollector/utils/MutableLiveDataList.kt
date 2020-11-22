@@ -11,17 +11,17 @@ class MutableLiveDataList<T> : MutableLiveData<MutableList<T>>() {
 
     fun add(element: T) {
         value.add(element)
-        notifyObserver();
+        notifyObserver()
     }
 
     fun addAll(elements: Collection<T>) {
-        value.addAll(elements);
-        notifyObserver();
+        value.addAll(elements)
+        notifyObserver()
     }
 
     fun clear() {
-        value.clear();
-        notifyObserver();
+        value.clear()
+        notifyObserver()
     }
 
     fun getSize(): Int? {
@@ -29,6 +29,6 @@ class MutableLiveDataList<T> : MutableLiveData<MutableList<T>>() {
     }
 
     private fun notifyObserver() {
-        postValue(value);
+        postValue(value)
     }
 }

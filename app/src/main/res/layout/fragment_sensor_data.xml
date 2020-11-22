@@ -6,9 +6,9 @@
     android:layout_height="fill_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    tools:context=".ui.location_data.LocationDataFragment">
+    tools:context=".ui.sensor_data.SensorDataFragment">
     <TextView
-        android:id="@+id/tvCurrentLocation"
+        android:id="@+id/tvCurrentSensorData"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         />

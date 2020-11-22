@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_nav_home_to_nav_settings2"
             app:destination="@id/nav_settings" />
+        <action
+            android:id="@+id/action_nav_home_to_sensorDataFragment"
+            app:destination="@id/nav_sensor_data" />
     </fragment>
 
     <fragment
@@ -82,6 +85,14 @@
         android:label="SettingsFragment" >
         <action
             android:id="@+id/action_nav_settings_to_nav_home2"
+            app:destination="@id/nav_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_sensor_data"
+        android:name="de.krd.lmapraktikum_datacollector.ui.sensor_data.SensorDataFragment"
+        android:label="SensorDataFragment" >
+        <action
+            android:id="@+id/action_nav_settings_to_nav_home"
             app:destination="@id/nav_home" />
     </fragment>
 </navigation>
