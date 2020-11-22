@@ -2,7 +2,6 @@ package de.krd.lmapraktikum_datacollector
 
 import android.os.Bundle
 import android.view.Menu
-import android.widget.ToggleButton
 import androidx.activity.viewModels
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -12,11 +11,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.widget.Toolbar
-import de.krd.lmapraktikum_datacollector.helper.PermissionManager
+import de.krd.lmapraktikum_datacollector.recorder.LocationRecorder
+import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 import kotlinx.android.synthetic.main.app_bar_main.*
 
-class MainActivity : PermissionManager() {
-    private val model: MainActivityModel by viewModels()
+class MainActivity : PermissionActivity() {
+    private val model: GlobalModel by viewModels()
     private lateinit var locationRecorder: LocationRecorder;
 
     private lateinit var appBarConfiguration: AppBarConfiguration

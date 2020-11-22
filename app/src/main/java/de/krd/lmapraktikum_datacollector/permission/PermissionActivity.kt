@@ -1,11 +1,6 @@
-package de.krd.lmapraktikum_datacollector.helper
+package de.krd.lmapraktikum_datacollector.permission
 
-import android.Manifest
-import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Parcel
-import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -13,7 +8,7 @@ import androidx.core.content.ContextCompat
 /*
  * This class helps to request access rights on runtime without having the need to make use of the onRequestPermissionsResult
  */
-open class PermissionManager : AppCompatActivity() {
+open class PermissionActivity : AppCompatActivity() {
     /*
      * All current open requests
      */

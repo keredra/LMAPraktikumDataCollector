@@ -2,22 +2,23 @@ package de.krd.lmapraktikum_datacollector.data
 
 import android.hardware.SensorEvent
 import android.location.Location
-import de.krd.lmapraktikum_datacollector.helper.MutableLiveDataList
+import de.krd.lmapraktikum_datacollector.utils.MutableLiveDataList
 import org.json.JSONObject
 
 class DataCollection {
     val locations = MutableLiveDataList<Location>()
     val sensorEvents = MutableLiveDataList<SensorEvent>()
 
+    companion object {
+        fun toJSON(): JSONObject {
+            var json = JSONObject()
 
-    fun toJSON() : JSONObject {
-        var json = JSONObject()
 
+            return json
+        }
 
-        return json
-    }
-
-    fun fromJSON(json: JSONObject) {
-
+        fun fromJSON(json: JSONObject) : DataCollection {
+            return DataCollection()
+        }
     }
 }

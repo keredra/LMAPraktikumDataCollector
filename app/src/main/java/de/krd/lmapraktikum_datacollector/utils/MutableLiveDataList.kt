@@ -1,4 +1,4 @@
-package de.krd.lmapraktikum_datacollector.helper
+package de.krd.lmapraktikum_datacollector.utils
 
 import androidx.lifecycle.MutableLiveData
 

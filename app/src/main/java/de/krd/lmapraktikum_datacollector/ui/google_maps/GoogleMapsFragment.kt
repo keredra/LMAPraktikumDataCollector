@@ -17,7 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
-import de.krd.lmapraktikum_datacollector.MainActivityModel
+import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedListener {
-    private val mainModel: MainActivityModel by activityViewModels()
+    private val model: GlobalModel by activityViewModels()
     private var polyline: Polyline? = null
     private var follow = true
     private var followJob: Job? = null;
@@ -68,9 +68,9 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     override fun onMapReady(googleMap: GoogleMap?) {
         this.map = googleMap!!
 
-        mainModel.data.locations.observe(viewLifecycleOwner, Observer {
+        model.data.locations.observe(viewLifecycleOwner, Observer {
             onLocationChange(it)
-        });
+        })
 
         map.setOnCameraMoveStartedListener(this)
     }
@@ -94,7 +94,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
                 map.animateCamera(
                     CameraUpdateFactory.newLatLngZoom(
                         latLngs.last(),
-                        mainModel.settings.zoomFactor
+                        model.settings.googleMaps.value!!.zoomFactor
                     )
                 )
             }
@@ -105,10 +105,12 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     override fun onCameraMoveStarted(reason: Int) {
         if (reason == OnCameraMoveStartedListener.REASON_GESTURE) {
             follow = false
-            followJob?.cancel()
-            followJob = GlobalScope.launch {
-                delay(10000)
-                follow = true
+            if (model.settings.googleMaps.value!!.followEnabled) {
+                followJob?.cancel()
+                followJob = GlobalScope.launch {
+                    delay(10000)
+                    follow = true
+                }
             }
         } else if (reason == OnCameraMoveStartedListener
                 .REASON_API_ANIMATION) {
