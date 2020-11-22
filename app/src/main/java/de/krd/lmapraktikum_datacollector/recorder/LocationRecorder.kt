@@ -3,18 +3,23 @@ package de.krd.lmapraktikum_datacollector.recorder
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import de.krd.lmapraktikum_datacollector.GlobalModel
+import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 
 class LocationRecorder {
+    private var run = false;
     private lateinit var activity: PermissionActivity
     private lateinit var model: GlobalModel
     private lateinit var locationManager: LocationManager
+    private lateinit var preferences: SharedPreferences
 
     constructor(activity: PermissionActivity, model: GlobalModel) {
         this.activity = activity;
@@ -23,11 +28,18 @@ class LocationRecorder {
          * Get the location service
          */
         locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
-//        model.settings.location.observe(activity, Observer {
-//            stop()
-//            start()
-//        })
+        preferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key -> run {
+            when (key) {
+                activity.getString(R.string.setting_location_enable_gps), activity.getString(R.string.setting_location_enable_network) -> {
+                    if (run) {
+                        removeLocationRequests()
+                        addLocationRequests()
+                    }
+                }
+            }
+        } }
     }
 
     private val locationListener = LocationListener { location ->
@@ -46,37 +58,45 @@ class LocationRecorder {
         }
     }
 
-    @SuppressLint("MissingPermission")
     fun start() {
-        /*
-                * Start the location listening and request for updates
-                */
-        val settings = model.settings.location.value!!;
+        run = true;
+        addLocationRequests()
+    }
 
-        if (settings.gpsEnabled) {
+    fun stop() {
+        run = false
+        removeLocationRequests()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun addLocationRequests() {
+        val minTimeMs = preferences.getString(activity.getString(R.string.setting_location_update_time), "0")!!.toLong()
+        val minDistanceM = preferences.getString(activity.getString(R.string.setting_location_min_distance), "0.0")!!.toFloat()
+
+        if (preferences.getBoolean(activity.getString(R.string.setting_location_enable_gps), false)) {
             activity.withPermission(Manifest.permission.ACCESS_FINE_LOCATION) {
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    settings.minTimeMs,
-                    settings.minDistanceM,
+                    minTimeMs,
+                    minDistanceM,
                     locationListener
                 )
             }
         }
 
-        if (settings.networkEnabled) {
+        if (preferences.getBoolean(activity.getString(R.string.setting_location_enable_network), false)) {
             activity.withPermission(Manifest.permission.ACCESS_COARSE_LOCATION) {
                 locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
-                    settings.minTimeMs,
-                    settings.minDistanceM,
+                    minTimeMs,
+                    minDistanceM,
                     locationListener
                 )
             }
         }
     }
 
-    fun stop() {
+    private fun removeLocationRequests() {
         locationManager.removeUpdates(locationListener)
     }
 

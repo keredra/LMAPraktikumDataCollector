@@ -30,4 +30,40 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_location_data">Lokalisierungsdaten</string>
+    <string name="setting_location_header">Lokalisierung</string>
+
+    <string name="setting_location_enable_gps">setting_location_enable_gps</string>
+    <string name="setting_google_maps_follow_location">setting_google_maps_follow_location</string>
+    <string name="setting_google_maps_zoom_factor">setting_google_maps_zoom_factor</string>
+    <string name="setting_google_maps_follow_timeout">setting_google_maps_follow_timeout</string>
+    <string name="setting_location_enable_network">setting_location_enable_network</string>
+    <string name="setting_location_update_time">setting_location_update_time</string>
+    <string name="setting_location_min_distance">setting_location_min_distance</string>
+
+
+    <string name="setting_location_enable_gps_title">GPS</string>
+    <string name="setting_location_enable_gps_summary_on">GPS-Ortung aktiv</string>
+    <string name="setting_location_enable_gps_summary_off">keine GPS-Ortung</string>
+
+    <string name="setting_location_enable_network_title">Netzwerk</string>
+    <string name="setting_location_enable_network_summary_on">Netzwerk-Ortung aktiv</string>
+    <string name="setting_location_enable_network_summary_off">keine Netzwerk-Ortung</string>
+
+    <string name="setting_location_update_time_title">Aktualisierungsrate</string>
+    <string name="setting_location_update_time_summary">Legt fest wieviel Zeit zwischen zwei Ortungen vergehen müssen</string>
+
+    <string name="setting_location_min_distance_title">Distanz</string>
+    <string name="setting_location_min_distance_summary">Legt die minimale Entfernung zwischen zwei Ortungen fest</string>
+
+    <string name="setting_google_maps_header">Google Maps</string>
+
+    <string name="setting_google_maps_zoom_factor_title">Zoomfaktor</string>
+    <string name="setting_google_maps_zoom_factor_summary">Bestimmt die Größe des Kartenausschnits bei der Verfolgung</string>
+
+    <string name="setting_google_maps_follow_location_title">Ortung verfolgen</string>
+    <string name="setting_google_maps_follow_location_summary_on">Die Kamera wird automatisch auf die aktuelle Position ausgerichtet</string>
+    <string name="setting_google_maps_follow_location_summary_off">keine Verfolgung aktiv</string>
+
+    <string name="setting_google_maps_follow_timeout_title">Verfolgungstimeout</string>
+    <string name="setting_google_maps_follow_timeout_summary">Bestimmt den Zeitraum nach dem nach einer manuellen Verschiebung der Karte die Verfolgung wieder aktiv wird</string>
 </resources>

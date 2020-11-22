@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_nav_home_to_locationDataFragment"
             app:destination="@id/nav_location_data" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_settings2"
+            app:destination="@id/nav_settings" />
     </fragment>
 
     <fragment
@@ -71,6 +74,14 @@
         tools:layout="@layout/fragment_location_data" >
         <action
             android:id="@+id/action_locationDataFragment_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="de.krd.lmapraktikum_datacollector.ui.settings.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_nav_settings_to_nav_home2"
             app:destination="@id/nav_home" />
     </fragment>
 </navigation>

@@ -1,34 +1,69 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="@string/setting_google_maps_header"
+        app:icon="@drawable/ic_menu_map">
+
+
+        <SwitchPreferenceCompat
+            app:key="@string/setting_google_maps_follow_location"
+            app:summaryOff="@string/setting_google_maps_follow_location_summary_off"
+            app:summaryOn="@string/setting_google_maps_follow_location_summary_on"
+            app:title="@string/setting_google_maps_follow_location_title" />
 
         <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+            android:defaultValue="0"
+            android:inputType="number"
+            android:key="@string/setting_google_maps_zoom_factor"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/setting_google_maps_zoom_factor_summary"
+            android:title="@string/setting_google_maps_zoom_factor_title" />
 
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:dependency="@string/setting_google_maps_follow_location"
+            android:defaultValue="0"
+            android:inputType="number"
+            android:key="@string/setting_google_maps_follow_timeout"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/setting_google_maps_follow_timeout_summary"
+            android:title="@string/setting_google_maps_follow_timeout_title" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory
+        app:title="@string/setting_location_header"
+        app:icon="@drawable/ic_location">
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
+            app:key="@string/setting_location_enable_gps"
+            app:summaryOff="@string/setting_location_enable_gps_summary_off"
+            app:summaryOn="@string/setting_location_enable_gps_summary_on"
+            app:title="@string/setting_location_enable_gps_title" />
         <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+            app:key="@string/setting_location_enable_network"
+            app:summaryOff="@string/setting_location_enable_network_summary_off"
+            app:summaryOn="@string/setting_location_enable_network_summary_on"
+            app:title="@string/setting_location_enable_network_title" />
+        <EditTextPreference
+            android:defaultValue="0"
+            android:inputType="number"
+            android:key="@string/setting_location_update_time"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/setting_location_update_time_summary"
+            android:title="@string/setting_location_update_time_title" />
+        <EditTextPreference
+            android:defaultValue="0.0"
+            android:inputType="numberDecimal"
+            android:digits="1234567890."
+            android:key="@string/setting_location_min_distance"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/setting_location_min_distance_summary"
+            android:title="@string/setting_location_min_distance_title" />
+
 
     </PreferenceCategory>
 
