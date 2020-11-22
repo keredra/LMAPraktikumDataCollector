@@ -31,7 +31,9 @@ class SensorRecorder {
          */
         sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-
+        /*
+        TODO: Implementierung entsprechender Preferences als Key erforderlich, z.B. activity.getString(R.string.setting_sensor_enable_accelerometer), activity.getString(R.string.setting_sensor_enable_gyroscope)
+         */
         preferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
             run {
                 if (run) {
@@ -52,11 +54,11 @@ class SensorRecorder {
                 if(sensorEvents.isEmpty() || !isLastSensorEvent(event))
                     when (event.sensor?.type) {
                         TYPE_ACCELEROMETER -> {
-                            Log.d("", " X: ${event.values[0]}\n Y: ${event.values[1]} \n Z: ${event.values[2]} ")
+                            Log.d("Accelerometer", " X: ${event.values[0]}\n Y: ${event.values[1]} \n Z: ${event.values[2]} ")
                             model.data.sensorEvents.add(event)
                         }
                         TYPE_GYROSCOPE -> {
-                            Log.d("", " X: ${event.values[0]}\n Y: ${event.values[1]} \n Z: ${event.values[2]} ")
+                            Log.d("Gyroskop", " X: ${event.values[0]}\n Y: ${event.values[1]} \n Z: ${event.values[2]} ")
                             model.data.sensorEvents.add(event)
                         }
                     }
@@ -77,7 +79,10 @@ class SensorRecorder {
 
     @SuppressLint("MissingPermission")
     private fun addSensorRequests() {
-        val samplingRate = 1000
+        /*
+        TODO: Implementierung entsprechender Preferences erforderlich
+         */
+        val samplingRate = 10000
         val sensorType = 1
         when (sensorType) {
             TYPE_ACCELEROMETER -> {

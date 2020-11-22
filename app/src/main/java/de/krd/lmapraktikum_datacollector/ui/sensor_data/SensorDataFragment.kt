@@ -18,7 +18,9 @@ import kotlinx.android.synthetic.main.fragment_sensor_data.*
 class SensorDataFragment : Fragment() {
     private val model: GlobalModel by activityViewModels()
     private lateinit var preferences: SharedPreferences
-
+    /*
+    TODO: Implementierung der gesammelten Sensordaten unterhalb der aktuellen Sensordaten in diesem Fragment
+    */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -31,6 +33,9 @@ class SensorDataFragment : Fragment() {
             val sensorEvents = it
 
             if (!sensorEvents.isEmpty()) {
+                /*
+                    TODO: Angabe des Sensortyps für die aktuellen Sensordaten
+                */
                 tvCurrentSensorData.text =
                     "X: " + sensorEvents.last().values[0] + " Y: " + sensorEvents.last().values[1] + " Z: " + sensorEvents.last().values[2]
             }
