@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import kotlinx.android.synthetic.main.fragment_sensor_data.*
+import org.json.JSONObject
 
 @Suppress("DEPRECATION")
 class SensorDataFragment : Fragment() {
@@ -34,6 +35,7 @@ class SensorDataFragment : Fragment() {
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         model.data.sensorEvents.observe(viewLifecycleOwner, Observer {
             val sensorEvents = it
+            
             if (!sensorEvents.isEmpty()) {
                 when (sensorEvents.last().sensor.type) {
                     TYPE_ACCELEROMETER -> {

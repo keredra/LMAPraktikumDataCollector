@@ -20,6 +20,7 @@ import de.krd.lmapraktikum_datacollector.recorder.LocationRecorder
 import de.krd.lmapraktikum_datacollector.recorder.SensorRecorder
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.*
+import kotlin.jvm.Throws
 import kotlin.math.log
 
 
@@ -61,8 +62,6 @@ class MainActivity : PermissionActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home,
-                R.id.nav_gallery,
-                R.id.nav_slideshow,
                 R.id.nav_location_data,
                 R.id.nav_sensor_data
             ), drawerLayout
