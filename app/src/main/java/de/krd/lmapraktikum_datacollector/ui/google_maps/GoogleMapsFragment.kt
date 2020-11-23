@@ -193,7 +193,6 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        val context = requireContext()
         when (key) {
             getString(R.string.setting_google_maps_zoom_factor),
             getString(R.string.setting_google_maps_follow_timeout),
