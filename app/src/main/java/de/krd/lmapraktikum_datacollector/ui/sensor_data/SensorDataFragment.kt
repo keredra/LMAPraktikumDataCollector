@@ -37,15 +37,9 @@ class SensorDataFragment : Fragment() {
             val sensorEvents = it
             
             if (!sensorEvents.isEmpty()) {
-                when (sensorEvents.last().sensor.type) {
-                    TYPE_ACCELEROMETER -> {
-                        tvCurrentSensorData.text = "Accelerometer, X: " + sensorEvents.last().values[0] + " Y: " + sensorEvents.last().values[1] + " Z: " + sensorEvents.last().values[2]
+                        tvCurrentSensorData.text = "X: " + sensorEvents.last().values[0] + " Y: " + sensorEvents.last().values[1] + " Z: " + sensorEvents.last().values[2]
                     }
-                    TYPE_GYROSCOPE -> {
-                        tvCurrentSensorData.text = "Gyroskop, X: " + sensorEvents.last().values[0] + " Y: " + sensorEvents.last().values[1] + " Z: " + sensorEvents.last().values[2]
-                    }
-                }
-            }
+
         })
     }
 }
