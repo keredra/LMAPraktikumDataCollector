@@ -14,6 +14,7 @@ import android.util.Log
 import androidx.lifecycle.Observer
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
+import de.krd.lmapraktikum_datacollector.data.LocationData
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
 import java.util.prefs.PreferenceChangeEvent
@@ -47,7 +48,8 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         /*
          * Check if location is new
          */
-        if (locations.isEmpty() || !isLastProviderLocation(location)) {
+        val locationData = LocationData.fromLocation(location)
+        if (locations.isEmpty() || !isLastProviderLocation(locationData)) {
             /*
              * GPS Debug Message
              */
@@ -56,7 +58,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                         + " alt: ${location.altitude}" + " acc: ${location.accuracy}"
             )
 
-            model.data.locations.add(location);
+            model.data.locations.add(locationData);
         }
     }
 
@@ -99,7 +101,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         locationManager.removeUpdates(locationListener)
     }
 
-    private fun isLastProviderLocation(location: Location): Boolean {
+    private fun isLastProviderLocation(location: LocationData): Boolean {
         val locations = model.data.locations.value;
         var isLastLocation: Boolean = false;
         if (!locations.isEmpty()) {
@@ -116,7 +118,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     companion object {
-        fun compareLocations(l1: Location, l2: Location): Boolean {
+        fun compareLocations(l1: LocationData, l2: LocationData): Boolean {
             return l1.provider.equals(l2.provider)
                     && l1.latitude == l2.latitude
                     && l1.longitude == l2.longitude

@@ -20,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
+import de.krd.lmapraktikum_datacollector.data.LocationData
 import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -92,7 +93,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
         map.setOnCameraMoveStartedListener(this)
     }
 
-    private fun onLocationChange(locations: MutableList<Location>) {
+    private fun onLocationChange(locations: MutableList<LocationData>) {
         polyline?.remove()
         listOfCircles.forEach { it.remove() }
         listOfCircles.clear()
