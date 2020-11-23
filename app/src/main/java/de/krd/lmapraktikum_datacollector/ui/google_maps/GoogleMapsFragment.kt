@@ -95,6 +95,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     private fun onLocationChange(locations: MutableList<Location>) {
         polyline?.remove()
         listOfCircles.forEach { it.remove() }
+        listOfCircles.clear()
         if (!locations.isEmpty()) {
 
             if (showRoute) {
@@ -174,12 +175,6 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
                     follow = true
                 }
             }
-        } else if (reason == OnCameraMoveStartedListener
-                .REASON_API_ANIMATION
-        ) {
-        } else if (reason == OnCameraMoveStartedListener
-                .REASON_DEVELOPER_ANIMATION
-        ) {
         }
     }
 

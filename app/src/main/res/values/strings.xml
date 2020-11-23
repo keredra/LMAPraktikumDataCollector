@@ -71,4 +71,21 @@
     <string name="setting_google_maps_enable_polyline_title">Route anzeigen</string>
     <string name="setting_google_maps_enable_polyline_summary_on">Eine Ortungsverlaufslinie wird angezeit</string>
     <string name="setting_google_maps_enable_polyline_summary_off">keine Route sichtbar</string>
+    <string name="setting_sensor_header">Sensoren</string>
+    <string name="setting_sensor_enable_gyroscope">setting_sensor_enable_gyroscope</string>
+    <string name="setting_sensor_enable_gyroscope_title">Gyroscope</string>
+    <string name="setting_sensor_enable_gyroscope_summary_off">keine Aufzeichnung von Drehbewegungen</string>
+    <string name="setting_sensor_enable_gyroscope_summary_on">Drehbewegungen werden aufgezeichnet</string>
+    <string name="setting_sensor_enable_accelerometer">setting_sensor_enable_accelerometer</string>
+    <string name="setting_sensor_enable_accelerometer_title">Accelerometer</string>
+    <string name="setting_sensor_enable_accelerometer_summary_on">Beschleunigungsdaten werden aufgezeichnet</string>
+    <string name="setting_sensor_enable_accelerometer_summary_off">keine Aufzeichnung von Beschleunigungsdaten</string>
+
+    <string name="setting_sensor_sampling_period">setting_sensor_sampling_rate</string>
+    <string name="setting_sensor_sampling_period_title">Aktualisierungsperiode</string>
+    <string name="setting_google_maps_show_accuracy">setting_google_maps_show_accuracy</string>
+    <string name="setting_google_maps_show_accuracy_title">Genauigkeit anzeigen</string>
+    <string name="setting_google_maps_show_accuracy_summary_on">Die Genauigkeit wird auf der Karte dargestellt</string>
+    <string name="setting_google_maps_show_accuracy_summary_off">keine Genauigkeitsanzeige</string>
+    <string name="action_delete_data">Daten löschen</string>
 </resources>
