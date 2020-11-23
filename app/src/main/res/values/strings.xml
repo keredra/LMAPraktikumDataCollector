@@ -66,4 +66,9 @@
 
     <string name="setting_google_maps_follow_timeout_title">Verfolgungstimeout</string>
     <string name="setting_google_maps_follow_timeout_summary">Bestimmt den Zeitraum nach dem nach einer manuellen Verschiebung der Karte die Verfolgung wieder aktiv wird</string>
+
+    <string name="setting_google_maps_enable_polyline">setting_location_enable_polyline</string>
+    <string name="setting_google_maps_enable_polyline_title">Route anzeigen</string>
+    <string name="setting_google_maps_enable_polyline_summary_on">Eine Ortungsverlaufslinie wird angezeit</string>
+    <string name="setting_google_maps_enable_polyline_summary_off">keine Route sichtbar</string>
 </resources>

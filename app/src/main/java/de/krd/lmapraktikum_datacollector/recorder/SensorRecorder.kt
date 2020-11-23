@@ -16,7 +16,7 @@ import android.util.Log
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 
-class SensorRecorder {
+class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private var run = false
     private var activity: PermissionActivity
     private lateinit var model: GlobalModel
@@ -34,14 +34,7 @@ class SensorRecorder {
         /*
         TODO: Implementierung entsprechender Preferences als Key erforderlich, z.B. activity.getString(R.string.setting_sensor_enable_accelerometer), activity.getString(R.string.setting_sensor_enable_gyroscope)
          */
-        preferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
-            run {
-                if (run) {
-                    removeSensorRequests()
-                    addSensorRequests()
-                }
-            }
-        }
+        preferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     private val sensorListener by lazy {
@@ -119,6 +112,13 @@ class SensorRecorder {
                     && e1.values[0] == e2.values[0]
                     && e1.values[1] == e2.values[1]
                     && e1.values[2] == e2.values[2]
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (run) {
+            removeSensorRequests()
+            addSensorRequests()
         }
     }
 }

@@ -11,6 +11,12 @@
             app:summaryOn="@string/setting_google_maps_follow_location_summary_on"
             app:title="@string/setting_google_maps_follow_location_title" />
 
+        <SwitchPreferenceCompat
+            app:key="@string/setting_google_maps_enable_polyline"
+            app:summaryOff="@string/setting_google_maps_enable_polyline_summary_off"
+            app:summaryOn="@string/setting_google_maps_enable_polyline_summary_on"
+            app:title="@string/setting_google_maps_enable_polyline_title" />
+
         <EditTextPreference
             android:defaultValue="0"
             android:inputType="number"
@@ -41,6 +47,7 @@
             app:summaryOff="@string/setting_location_enable_gps_summary_off"
             app:summaryOn="@string/setting_location_enable_gps_summary_on"
             app:title="@string/setting_location_enable_gps_title" />
+
         <SwitchPreferenceCompat
             app:key="@string/setting_location_enable_network"
             app:summaryOff="@string/setting_location_enable_network_summary_off"
