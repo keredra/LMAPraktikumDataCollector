@@ -1,6 +1,10 @@
+@file:Suppress("DEPRECATION")
+
 package de.krd.lmapraktikum_datacollector.ui.sensor_data
 
 import android.content.SharedPreferences
+import android.hardware.Sensor.TYPE_ACCELEROMETER
+import android.hardware.Sensor.TYPE_GYROSCOPE
 import android.os.Bundle
 import android.preference.PreferenceManager
 import androidx.fragment.app.Fragment
@@ -11,7 +15,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
-import kotlinx.android.synthetic.main.fragment_location_data.*
 import kotlinx.android.synthetic.main.fragment_sensor_data.*
 
 @Suppress("DEPRECATION")
@@ -31,13 +34,15 @@ class SensorDataFragment : Fragment() {
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         model.data.sensorEvents.observe(viewLifecycleOwner, Observer {
             val sensorEvents = it
-
             if (!sensorEvents.isEmpty()) {
-                /*
-                    TODO: Angabe des Sensortyps für die aktuellen Sensordaten
-                */
-                tvCurrentSensorData.text =
-                    "X: " + sensorEvents.last().values[0] + " Y: " + sensorEvents.last().values[1] + " Z: " + sensorEvents.last().values[2]
+                when (sensorEvents.last().sensor.type) {
+                    TYPE_ACCELEROMETER -> {
+                        tvCurrentSensorData.text = "Accelerometer, X: " + sensorEvents.last().values[0] + " Y: " + sensorEvents.last().values[1] + " Z: " + sensorEvents.last().values[2]
+                    }
+                    TYPE_GYROSCOPE -> {
+                        tvCurrentSensorData.text = "Gyroskop, X: " + sensorEvents.last().values[0] + " Y: " + sensorEvents.last().values[1] + " Z: " + sensorEvents.last().values[2]
+                    }
+                }
             }
         })
     }

@@ -74,4 +74,30 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:title="Sensoren"
+        app:icon="@drawable/ic_location">
+        <SwitchPreferenceCompat
+            app:key="setting_sensor_enable_gyroskop"
+            app:summaryOff="Gyroskop deaktiviert"
+            app:summaryOn="Gyroskop aktiviert"
+            app:title="Gyroskop" />
+
+        <SwitchPreferenceCompat
+            app:key="setting_sensor_enable_accelerometer"
+            app:summaryOff="Accelerometer deaktiviert"
+            app:summaryOn="Accelerometer aktiviert"
+            app:title="Accelerometer" />
+
+        <SeekBarPreference
+            app:key="setting_sensor_abtastrate"
+            app:summary="Die Abtastrate wird anhand von vier Möglichkeiten ausgewählt"
+            app:seekBarIncrement="1"
+            app:defaultValue="1"
+            app:min="0"
+            android:max="3"
+            app:title="Abtastrate"
+        />
+    </PreferenceCategory>
+
 </PreferenceScreen>

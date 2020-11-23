@@ -11,17 +11,11 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_nav_home_to_nav_gallery"
-            app:destination="@id/nav_gallery" />
-        <action
             android:id="@+id/action_nav_home_to_settingsFragment"
             app:destination="@id/settingsFragment" />
         <action
             android:id="@+id/action_nav_home_to_nav_google_maps"
             app:destination="@id/nav_google_maps" />
-        <action
-            android:id="@+id/action_nav_home_to_nav_slideshow"
-            app:destination="@id/nav_slideshow" />
         <action
             android:id="@+id/action_nav_home_to_locationDataFragment"
             app:destination="@id/nav_location_data" />
@@ -31,26 +25,6 @@
         <action
             android:id="@+id/action_nav_home_to_sensorDataFragment"
             app:destination="@id/nav_sensor_data" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="de.krd.lmapraktikum_datacollector.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" >
-        <action
-            android:id="@+id/action_nav_gallery_to_nav_home"
-            app:destination="@id/nav_home" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="de.krd.lmapraktikum_datacollector.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" >
-        <action
-            android:id="@+id/action_nav_slideshow_to_nav_home"
-            app:destination="@id/nav_home" />
     </fragment>
 
     <fragment

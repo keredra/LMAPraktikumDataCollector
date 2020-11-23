@@ -11,13 +11,19 @@ import android.hardware.Sensor.TYPE_GYROSCOPE
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.SensorManager.SENSOR_DELAY_NORMAL
 import android.preference.PreferenceManager
 import android.util.Log
 import de.krd.lmapraktikum_datacollector.GlobalModel
+import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
+import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
 
 class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private var run = false
+    private var gyroEnabled = false
+    private var accelerometerEnabled = false
+    private var samplingRate = 1
     private var activity: PermissionActivity
     private lateinit var model: GlobalModel
     private var sensorManager: SensorManager
@@ -31,33 +37,30 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
          */
         sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        /*
-        TODO: Implementierung entsprechender Preferences als Key erforderlich, z.B. activity.getString(R.string.setting_sensor_enable_accelerometer), activity.getString(R.string.setting_sensor_enable_gyroscope)
-         */
+        loadPreferences()
         preferences.registerOnSharedPreferenceChangeListener(this)
     }
 
-    private val sensorListener by lazy {
-        object: SensorEventListener {
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-            }
-
-            override fun onSensorChanged(event: SensorEvent) {
-                val sensorEvents = model.data.sensorEvents.value
-                if(sensorEvents.isEmpty() || !isLastSensorEvent(event))
-                    when (event.sensor?.type) {
-                        TYPE_ACCELEROMETER -> {
-                            Log.d("Accelerometer", " X: ${event.values[0]}\n Y: ${event.values[1]} \n Z: ${event.values[2]} ")
-                            model.data.sensorEvents.add(event)
-                        }
-                        TYPE_GYROSCOPE -> {
-                            Log.d("Gyroskop", " X: ${event.values[0]}\n Y: ${event.values[1]} \n Z: ${event.values[2]} ")
-                            model.data.sensorEvents.add(event)
-                        }
-                    }
-
-            }
+    private val sensorListener = object: SensorEventListener {
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         }
+
+        override fun onSensorChanged(event: SensorEvent) {
+            val sensorEvents = model.data.sensorEvents.value
+            if(sensorEvents.isEmpty() || !isLastSensorEvent(event))
+                when (event.sensor?.type) {
+                    TYPE_ACCELEROMETER -> {
+                        Log.d("Accelerometer", " X: ${event.values[0]}, Y: ${event.values[1]}, Z: ${event.values[2]} ")
+                        model.data.sensorEvents.add(event)
+                    }
+                    TYPE_GYROSCOPE -> {
+                        Log.d("Gyroskop", " X: ${event.values[0]}, Y: ${event.values[1]}, Z: ${event.values[2]} ")
+                        model.data.sensorEvents.add(event)
+                    }
+                }
+
+        }
+
     }
 
     fun start() {
@@ -72,18 +75,12 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
 
     @SuppressLint("MissingPermission")
     private fun addSensorRequests() {
-        /*
-        TODO: Implementierung entsprechender Preferences erforderlich
-         */
-        val samplingRate = 10000
-        val sensorType = 1
-        when (sensorType) {
-            TYPE_ACCELEROMETER -> {
-                sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(TYPE_ACCELEROMETER), samplingRate)
-            }
-            TYPE_GYROSCOPE -> {
-                sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(TYPE_GYROSCOPE), samplingRate)
-            }
+
+        if(accelerometerEnabled) {
+            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(TYPE_ACCELEROMETER), samplingRate)
+        }
+        if(gyroEnabled) {
+            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(TYPE_GYROSCOPE), samplingRate)
         }
     }
 
@@ -93,8 +90,8 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
 
     private fun isLastSensorEvent(event: SensorEvent) : Boolean {
         val sensorEvents = model.data.sensorEvents.value
-        var isLastSensorEvent = false
-        if (!sensorEvents.isEmpty()) {
+        var isLastSensorEvent: Boolean = false
+        if (sensorEvents.isNotEmpty()) {
             val itr = sensorEvents.listIterator(sensorEvents.size)
 
             var lastSensorEventTypeChecked = false
@@ -115,10 +112,34 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
+    private fun loadPreferences() {
+        gyroEnabled = PreferenceHelper.getBoolean(
+                activity,
+                preferences,
+                R.string.setting_sensor_enable_gyroskop
+        )
+        accelerometerEnabled = PreferenceHelper.getBoolean(
+                activity,
+                preferences,
+                R.string.setting_sensor_enable_accelerometer
+        )
+        samplingRate = PreferenceHelper.getInt(
+                activity,
+                preferences,
+                R.string.setting_sensor_abtastrate
+        )
+    }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (run) {
-            removeSensorRequests()
-            addSensorRequests()
+        when(key) {
+            activity.getString(R.string.setting_sensor_enable_accelerometer),
+            activity.getString(R.string.setting_sensor_enable_accelerometer),
+            activity.getString(R.string.setting_sensor_abtastrate)->{
+                loadPreferences()
+                if (run) {
+                    removeSensorRequests()
+                    addSensorRequests()
+                }
+            }
         }
     }
 }
