@@ -20,7 +20,7 @@ import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
 
 class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private var run = false
-    private var samplingRate = 0
+    private var samplingPeriodUs = 0
     private var gyroscopeEnabled = false
     private var accelerometerEnabled = false
     private var activity: PermissionActivity
@@ -33,10 +33,12 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         }
 
         override fun onSensorChanged(event: SensorEvent) {
-            val sensorEvents = model.data.sensorEvents.value
-            if(sensorEvents.isEmpty() || !isLastSensorEvent(event)) {
-                Log.d(event.sensor?.name, " X: ${event.values[0]} Y: ${event.values[1]} Z: ${event.values[2]}")
-                model.data.sensorEvents.add(event)
+            when(event?.sensor?.type){
+                Sensor.TYPE_ACCELEROMETER,
+                Sensor.TYPE_GYROSCOPE -> {
+                    Log.d(event.sensor?.name, " X: ${event.values[0]} Y: ${event.values[1]} Z: ${event.values[2]}")
+                    model.data.sensorEvents.add(event)
+                }
             }
         }
     }
@@ -66,10 +68,10 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     @SuppressLint("MissingPermission")
     private fun addSensorRequests() {
         if (gyroscopeEnabled) {
-            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(TYPE_GYROSCOPE), samplingRate)
+            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(TYPE_GYROSCOPE), samplingPeriodUs)
         }
         if (accelerometerEnabled) {
-            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(TYPE_ACCELEROMETER), samplingRate)
+            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(TYPE_ACCELEROMETER), samplingPeriodUs)
         }
     }
 
@@ -77,31 +79,6 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         sensorManager.unregisterListener(sensorEventListener)
     }
 
-    private fun isLastSensorEvent(event: SensorEvent) : Boolean {
-        val sensorEvents = model.data.sensorEvents.value
-        var isLastSensorEvent = false
-        if (!sensorEvents.isEmpty()) {
-            val itr = sensorEvents.listIterator(sensorEvents.size)
-
-            var lastSensorEventTypeChecked = false
-            while (!isLastSensorEvent && !lastSensorEventTypeChecked && itr.hasPrevious()) {
-                val listSensorEvent = itr.previous()
-                isLastSensorEvent = compareSensorEvents(event, listSensorEvent)
-                lastSensorEventTypeChecked = event.sensor.type.equals(listSensorEvent.sensor.type)
-            }
-        }
-        return isLastSensorEvent
-    }
-
-
-    companion object {
-        fun compareSensorEvents(e1: SensorEvent, e2: SensorEvent): Boolean {
-            return e1.sensor.type.equals(e2.sensor.type)
-                    && e1.values[0] == e2.values[0]
-                    && e1.values[1] == e2.values[1]
-                    && e1.values[2] == e2.values[2]
-        }
-    }
     private fun loadPreferences() {
         gyroscopeEnabled = PreferenceHelper.getBoolean(
             activity,
@@ -113,17 +90,17 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             preferences,
             R.string.setting_sensor_enable_accelerometer
         )
-        samplingRate = PreferenceHelper.getInt(
+        samplingPeriodUs = PreferenceHelper.getInt(
             activity,
             preferences,
-            R.string.setting_sensor_sampling_rate
+            R.string.setting_sensor_sampling_period
         )
     }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
             activity.getString(R.string.setting_sensor_enable_gyroscope),
             activity.getString(R.string.setting_sensor_enable_accelerometer),
-            activity.getString(R.string.setting_sensor_sampling_rate) -> {
+            activity.getString(R.string.setting_sensor_sampling_period) -> {
                 loadPreferences()
                 if (run) {
                     removeSensorRequests()

@@ -80,6 +80,7 @@
     <string name="setting_sensor_enable_accelerometer_title">Accelerometer</string>
     <string name="setting_sensor_enable_accelerometer_summary_on">Beschleunigungsdaten werden aufgezeichnet</string>
     <string name="setting_sensor_enable_accelerometer_summary_off">keine Aufzeichnung von Beschleunigungsdaten</string>
-    <string name="setting_sensor_sampling_rate">setting_sensor_sampling_rate</string>
-    <string name="setting_sensor_sampling_rate_title">Aktualisierungsrate</string>
+
+    <string name="setting_sensor_sampling_period">setting_sensor_sampling_rate</string>
+    <string name="setting_sensor_sampling_period_title">Aktualisierungsperiode</string>
 </resources>

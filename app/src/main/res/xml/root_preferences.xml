@@ -88,10 +88,10 @@
         <EditTextPreference
             android:defaultValue="0"
             android:inputType="number"
-            android:key="@string/setting_sensor_sampling_rate"
+            android:key="@string/setting_sensor_sampling_period"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/setting_sensor_sampling_rate_title" />
+            android:title="@string/setting_sensor_sampling_period_title" />
 
 
     </PreferenceCategory>
