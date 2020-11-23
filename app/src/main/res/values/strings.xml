@@ -31,7 +31,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_location_data">Lokalisierungsdaten</string>
     <string name="setting_location_header">Lokalisierung</string>
-    <string name="setting_sensor_header">Sensoren</string>
 
     <string name="setting_location_enable_gps">setting_location_enable_gps</string>
     <string name="setting_google_maps_follow_location">setting_google_maps_follow_location</string>
@@ -40,9 +39,7 @@
     <string name="setting_location_enable_network">setting_location_enable_network</string>
     <string name="setting_location_update_time">setting_location_update_time</string>
     <string name="setting_location_min_distance">setting_location_min_distance</string>
-    <string name="setting_sensor_enable_gyroskop">setting_sensor_enable_gyroskop</string>
-    <string name="setting_sensor_enable_accelerometer">setting_sensor_enable_accelerometer</string>
-    <string name="setting_sensor_abtastrate">setting_sensor_abtastrate</string>
+
 
     <string name="setting_location_enable_gps_title">GPS</string>
     <string name="setting_location_enable_gps_summary_on">GPS-Ortung aktiv</string>
@@ -72,15 +69,6 @@
 
     <string name="setting_google_maps_enable_polyline">setting_location_enable_polyline</string>
     <string name="setting_google_maps_enable_polyline_title">Route anzeigen</string>
-    <string name="setting_google_maps_enable_polyline_summary_on">Eine Ortungsverlaufslinie wird angezeigt</string>
+    <string name="setting_google_maps_enable_polyline_summary_on">Eine Ortungsverlaufslinie wird angezeit</string>
     <string name="setting_google_maps_enable_polyline_summary_off">keine Route sichtbar</string>
-
-    <string name="setting_sensor_enable_gyroskop_title">Gyroskop</string>
-    <string name="setting_sensor_enable_gyroskop_summary_off">Gyroskop deaktiviert</string>
-    <string name="setting_sensor_enable_gyroskop_summary_on">Gyroskop aktivier</string>
-    <string name="setting_sensor_enable_accelerometer_title">Accelerometer</string>
-    <string name="setting_sensor_enable_accelerometer_summary_off">Accelerometer deaktiviert</string>
-    <string name="setting_sensor_enable_accelerometer_summary_on">Accelerometer aktiviert</string>
-    <string name="setting_sensor_abtastrate_title">Abtastrate</string>
-    <string name="setting_sensor_abtastrate_summary">Die Abtastrate wird anhand von vier Möglichkeiten ausgewählt</string>
 </resources>

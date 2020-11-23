@@ -17,10 +17,7 @@ import com.google.android.gms.maps.GoogleMap.CancelableCallback
 import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Polyline
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
@@ -39,9 +36,11 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     private var keepFollowing = true
     private var followingDelayTimeMs = 10000L
     private var showRoute = false;
+    private var showAccuracy = false;
     private lateinit var map: GoogleMap
     private lateinit var mapView: MapView
     private lateinit var preferences: SharedPreferences
+    private val listOfCircles = mutableListOf<Circle>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,6 +94,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
 
     private fun onLocationChange(locations: MutableList<Location>) {
         polyline?.remove()
+        listOfCircles.forEach { it.remove() }
         if (!locations.isEmpty()) {
 
             if (showRoute) {
@@ -107,20 +107,35 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
                 polyline = map.addPolyline(polylineOptions)
             }
 
-            var circleOptions = CircleOptions()
-            circleOptions.radius(1.0)
-
             locations.forEach {
+                var circleOptions = CircleOptions()
+                circleOptions.radius(1.0)
+                circleOptions.strokeColor(Color.TRANSPARENT)
+
+                var accuracyCircleOptions = CircleOptions()
+
+                accuracyCircleOptions.strokePattern(listOf(Dot()))
+                accuracyCircleOptions.strokeWidth(5.0f)
+
                 when (it.provider.toUpperCase()) {
                     "GPS" -> {
-                        circleOptions.strokeColor(Color.RED)
+                        circleOptions.fillColor(Color.RED)
+                        accuracyCircleOptions.strokeColor(Color.RED)
                     }
                     "NETWORK" -> {
-                        circleOptions.strokeColor(Color.GREEN)
+                        circleOptions.fillColor(Color.GREEN)
+                        accuracyCircleOptions.strokeColor(Color.GREEN)
                     }
                 }
                 circleOptions.center(LatLng(it.latitude, it.longitude))
-                map.addCircle(circleOptions)
+                listOfCircles.add(map.addCircle(circleOptions))
+
+                if (showAccuracy) {
+                    accuracyCircleOptions.center(LatLng(it.latitude, it.longitude))
+                    accuracyCircleOptions.radius(it.accuracy.toDouble())
+                    listOfCircles.add(map.addCircle(accuracyCircleOptions))
+
+                }
             }
 
             /*
@@ -190,14 +205,20 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
             preferences,
             R.string.setting_google_maps_enable_polyline
         )
+
+        showAccuracy = PreferenceHelper.getBoolean(
+            context,
+            preferences,
+            R.string.setting_google_maps_show_accuracy
+        )
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        val context = requireContext()
         when (key) {
             getString(R.string.setting_google_maps_zoom_factor),
             getString(R.string.setting_google_maps_follow_timeout),
-            getString(R.string.setting_google_maps_enable_polyline)-> {
+            getString(R.string.setting_google_maps_enable_polyline),
+            getString(R.string.setting_google_maps_show_accuracy) -> {
                 loadPreferences()
             }
             getString(R.string.setting_google_maps_follow_location) -> {
