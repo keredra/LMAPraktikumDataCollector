@@ -18,7 +18,7 @@
             app:title="@string/setting_google_maps_enable_polyline_title" />
 
         <EditTextPreference
-            android:defaultValue="0"
+            android:defaultValue="17.0"
             android:inputType="number"
             android:key="@string/setting_google_maps_zoom_factor"
             android:selectAllOnFocus="true"
@@ -27,7 +27,7 @@
 
         <EditTextPreference
             android:dependency="@string/setting_google_maps_follow_location"
-            android:defaultValue="0"
+            android:defaultValue="5"
             android:inputType="number"
             android:key="@string/setting_google_maps_follow_timeout"
             android:selectAllOnFocus="true"
@@ -52,7 +52,7 @@
             app:summaryOn="@string/setting_location_enable_network_summary_on"
             app:title="@string/setting_location_enable_network_title" />
         <EditTextPreference
-            android:defaultValue="0"
+            android:defaultValue="5000"
             android:inputType="number"
             android:key="@string/setting_location_update_time"
             android:selectAllOnFocus="true"
@@ -86,7 +86,7 @@
             app:summaryOn="@string/setting_sensor_enable_accelerometer_summary_on"
             app:title="@string/setting_sensor_enable_accelerometer_title" />
         <EditTextPreference
-            android:defaultValue="0"
+            android:defaultValue="1000000"
             android:inputType="number"
             android:key="@string/setting_sensor_sampling_period"
             android:selectAllOnFocus="true"
