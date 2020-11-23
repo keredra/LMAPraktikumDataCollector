@@ -95,6 +95,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     private fun onLocationChange(locations: MutableList<Location>) {
         polyline?.remove()
         listOfCircles.forEach { it.remove() }
+        listOfCircles.clear()
         if (!locations.isEmpty()) {
 
             if (showRoute) {
