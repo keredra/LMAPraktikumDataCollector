@@ -23,7 +23,6 @@
             android:key="@string/setting_google_maps_zoom_factor"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="@string/setting_google_maps_zoom_factor_summary"
             android:title="@string/setting_google_maps_zoom_factor_title" />
 
         <EditTextPreference
@@ -33,7 +32,6 @@
             android:key="@string/setting_google_maps_follow_timeout"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="@string/setting_google_maps_follow_timeout_summary"
             android:title="@string/setting_google_maps_follow_timeout_title" />
 
     </PreferenceCategory>
@@ -59,7 +57,6 @@
             android:key="@string/setting_location_update_time"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="@string/setting_location_update_time_summary"
             android:title="@string/setting_location_update_time_title" />
         <EditTextPreference
             android:defaultValue="0.0"
@@ -68,10 +65,34 @@
             android:key="@string/setting_location_min_distance"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="@string/setting_location_min_distance_summary"
             android:title="@string/setting_location_min_distance_title" />
 
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:title="@string/setting_sensor_header"
+        app:icon="@drawable/ic_sensor">
+
+        <SwitchPreferenceCompat
+            app:key="@string/setting_sensor_enable_gyroscope"
+            app:summaryOff="@string/setting_sensor_enable_gyroscope_summary_off"
+            app:summaryOn="@string/setting_sensor_enable_gyroscope_summary_on"
+            app:title="@string/setting_sensor_enable_gyroscope_title" />
+
+        <SwitchPreferenceCompat
+            app:key="@string/setting_sensor_enable_accelerometer"
+            app:summaryOff="@string/setting_sensor_enable_accelerometer_summary_off"
+            app:summaryOn="@string/setting_sensor_enable_accelerometer_summary_on"
+            app:title="@string/setting_sensor_enable_accelerometer_title" />
+        <EditTextPreference
+            android:defaultValue="0"
+            android:inputType="number"
+            android:key="@string/setting_sensor_sampling_rate"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/setting_sensor_sampling_rate_title" />
+
+
+    </PreferenceCategory>
 </PreferenceScreen>

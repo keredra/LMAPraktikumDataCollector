@@ -14,15 +14,32 @@ import android.hardware.SensorManager
 import android.preference.PreferenceManager
 import android.util.Log
 import de.krd.lmapraktikum_datacollector.GlobalModel
+import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
+import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
 
 class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private var run = false
+    private var samplingRate = 0
+    private var gyroscopeEnabled = false
+    private var accelerometerEnabled = false
     private var activity: PermissionActivity
     private lateinit var model: GlobalModel
     private var sensorManager: SensorManager
-    private var preferences: SharedPreferences
+    private val preferences: SharedPreferences
 
+    private val sensorEventListener = object: SensorEventListener {
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        }
+
+        override fun onSensorChanged(event: SensorEvent) {
+            val sensorEvents = model.data.sensorEvents.value
+            if(sensorEvents.isEmpty() || !isLastSensorEvent(event)) {
+                Log.d(event.sensor?.name, " X: ${event.values[0]} Y: ${event.values[1]} Z: ${event.values[2]}")
+                model.data.sensorEvents.add(event)
+            }
+        }
+    }
     constructor(activity: PermissionActivity, model: GlobalModel) {
         this.activity = activity
         this.model = model
@@ -31,33 +48,9 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
          */
         sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        /*
-        TODO: Implementierung entsprechender Preferences als Key erforderlich, z.B. activity.getString(R.string.setting_sensor_enable_accelerometer), activity.getString(R.string.setting_sensor_enable_gyroscope)
-         */
+
+        loadPreferences()
         preferences.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    private val sensorListener by lazy {
-        object: SensorEventListener {
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-            }
-
-            override fun onSensorChanged(event: SensorEvent) {
-                val sensorEvents = model.data.sensorEvents.value
-                if(sensorEvents.isEmpty() || !isLastSensorEvent(event))
-                    when (event.sensor?.type) {
-                        TYPE_ACCELEROMETER -> {
-                            Log.d("Accelerometer", " X: ${event.values[0]}\n Y: ${event.values[1]} \n Z: ${event.values[2]} ")
-                            model.data.sensorEvents.add(event)
-                        }
-                        TYPE_GYROSCOPE -> {
-                            Log.d("Gyroskop", " X: ${event.values[0]}\n Y: ${event.values[1]} \n Z: ${event.values[2]} ")
-                            model.data.sensorEvents.add(event)
-                        }
-                    }
-
-            }
-        }
     }
 
     fun start() {
@@ -72,23 +65,16 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
 
     @SuppressLint("MissingPermission")
     private fun addSensorRequests() {
-        /*
-        TODO: Implementierung entsprechender Preferences erforderlich
-         */
-        val samplingRate = 10000
-        val sensorType = 1
-        when (sensorType) {
-            TYPE_ACCELEROMETER -> {
-                sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(TYPE_ACCELEROMETER), samplingRate)
-            }
-            TYPE_GYROSCOPE -> {
-                sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(TYPE_GYROSCOPE), samplingRate)
-            }
+        if (gyroscopeEnabled) {
+            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(TYPE_GYROSCOPE), samplingRate)
+        }
+        if (accelerometerEnabled) {
+            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(TYPE_ACCELEROMETER), samplingRate)
         }
     }
 
     private fun removeSensorRequests() {
-        sensorManager.unregisterListener(sensorListener)
+        sensorManager.unregisterListener(sensorEventListener)
     }
 
     private fun isLastSensorEvent(event: SensorEvent) : Boolean {
@@ -106,6 +92,8 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         }
         return isLastSensorEvent
     }
+
+
     companion object {
         fun compareSensorEvents(e1: SensorEvent, e2: SensorEvent): Boolean {
             return e1.sensor.type.equals(e2.sensor.type)
@@ -114,11 +102,34 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                     && e1.values[2] == e2.values[2]
         }
     }
-
+    private fun loadPreferences() {
+        gyroscopeEnabled = PreferenceHelper.getBoolean(
+            activity,
+            preferences,
+            R.string.setting_sensor_enable_gyroscope
+        )
+        accelerometerEnabled = PreferenceHelper.getBoolean(
+            activity,
+            preferences,
+            R.string.setting_sensor_enable_accelerometer
+        )
+        samplingRate = PreferenceHelper.getInt(
+            activity,
+            preferences,
+            R.string.setting_sensor_sampling_rate
+        )
+    }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (run) {
-            removeSensorRequests()
-            addSensorRequests()
+        when (key) {
+            activity.getString(R.string.setting_sensor_enable_gyroscope),
+            activity.getString(R.string.setting_sensor_enable_accelerometer),
+            activity.getString(R.string.setting_sensor_sampling_rate) -> {
+                loadPreferences()
+                if (run) {
+                    removeSensorRequests()
+                    addSensorRequests()
+                }
+            }
         }
     }
 }
