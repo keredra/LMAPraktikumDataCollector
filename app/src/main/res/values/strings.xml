@@ -83,4 +83,8 @@
 
     <string name="setting_sensor_sampling_period">setting_sensor_sampling_rate</string>
     <string name="setting_sensor_sampling_period_title">Aktualisierungsperiode</string>
+    <string name="setting_google_maps_show_accuracy">setting_google_maps_show_accuracy</string>
+    <string name="setting_google_maps_show_accuracy_title">Genauigkeit anzeigen</string>
+    <string name="setting_google_maps_show_accuracy_summary_on">Die Genauigkeit wird auf der Karte dargestellt</string>
+    <string name="setting_google_maps_show_accuracy_summary_off">keine Genauigkeitsanzeige</string>
 </resources>

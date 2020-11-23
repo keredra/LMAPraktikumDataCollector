@@ -17,6 +17,12 @@
             app:summaryOn="@string/setting_google_maps_enable_polyline_summary_on"
             app:title="@string/setting_google_maps_enable_polyline_title" />
 
+        <SwitchPreferenceCompat
+            app:key="@string/setting_google_maps_show_accuracy"
+            app:summaryOff="@string/setting_google_maps_show_accuracy_summary_off"
+            app:summaryOn="@string/setting_google_maps_show_accuracy_summary_on"
+            app:title="@string/setting_google_maps_show_accuracy_title" />
+
         <EditTextPreference
             android:defaultValue="17.0"
             android:inputType="number"
