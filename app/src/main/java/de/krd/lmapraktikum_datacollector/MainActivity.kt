@@ -70,6 +70,10 @@ class MainActivity : PermissionActivity() {
                 val navController = findNavController(R.id.nav_host_fragment)
                 navController.navigate(R.id.settingsFragment)
             }
+            R.id.action_delete_data -> {
+                model.data.locations.clear()
+                model.data.sensorEvents.clear()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

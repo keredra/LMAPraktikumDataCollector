@@ -87,4 +87,5 @@
     <string name="setting_google_maps_show_accuracy_title">Genauigkeit anzeigen</string>
     <string name="setting_google_maps_show_accuracy_summary_on">Die Genauigkeit wird auf der Karte dargestellt</string>
     <string name="setting_google_maps_show_accuracy_summary_off">keine Genauigkeitsanzeige</string>
+    <string name="action_delete_data">Daten löschen</string>
 </resources>
