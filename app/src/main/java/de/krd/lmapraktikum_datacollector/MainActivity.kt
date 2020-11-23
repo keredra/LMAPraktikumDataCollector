@@ -121,7 +121,7 @@ class MainActivity : PermissionActivity() {
             if (requestCode == SAVE_REQUEST_CODE) {
                 if (resultData != null) {
                     currentUri = resultData.data!!
-                    writeFileContent(currentUri, "ABCDE")
+                    writeFileContent(currentUri, model.data.getJSON())
                 }
             } else if (requestCode == OPEN_REQUEST_CODE) {
                 if (resultData != null) {
@@ -129,6 +129,7 @@ class MainActivity : PermissionActivity() {
                     try {
                         val content: String? = readFileContent(currentUri)
                         Log.i("FileReader", ""+content)
+                        model.data.loadJSON(""+content)
                     } catch (e: IOException) {
                         // Handle error here
                     }

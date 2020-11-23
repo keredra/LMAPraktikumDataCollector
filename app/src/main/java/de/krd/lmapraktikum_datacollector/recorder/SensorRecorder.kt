@@ -15,6 +15,7 @@ import android.preference.PreferenceManager
 import android.util.Log
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
+import de.krd.lmapraktikum_datacollector.data.SensorData
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
 
@@ -37,7 +38,7 @@ class SensorRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                 Sensor.TYPE_ACCELEROMETER,
                 Sensor.TYPE_GYROSCOPE -> {
                     Log.d(event.sensor?.name, " X: ${event.values[0]} Y: ${event.values[1]} Z: ${event.values[2]}")
-                    model.data.sensorEvents.add(event)
+                    model.data.sensorEvents.add(SensorData.fromSensorEvent(event))
                 }
             }
         }
