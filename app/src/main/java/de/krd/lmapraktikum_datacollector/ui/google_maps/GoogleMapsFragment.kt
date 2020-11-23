@@ -175,12 +175,6 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
                     follow = true
                 }
             }
-        } else if (reason == OnCameraMoveStartedListener
-                .REASON_API_ANIMATION
-        ) {
-        } else if (reason == OnCameraMoveStartedListener
-                .REASON_DEVELOPER_ANIMATION
-        ) {
         }
     }
 
