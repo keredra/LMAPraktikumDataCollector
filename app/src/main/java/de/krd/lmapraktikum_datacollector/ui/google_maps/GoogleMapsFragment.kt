@@ -195,34 +195,14 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         val context = requireContext()
         when (key) {
-            getString(R.string.setting_google_maps_zoom_factor) -> {
-                zoomFactor = PreferenceHelper.getFloat(
-                    context,
-                    preferences,
-                    R.string.setting_google_maps_zoom_factor
-                )
+            getString(R.string.setting_google_maps_zoom_factor),
+            getString(R.string.setting_google_maps_follow_timeout),
+            getString(R.string.setting_google_maps_enable_polyline)-> {
+                loadPreferences()
             }
             getString(R.string.setting_google_maps_follow_location) -> {
-                keepFollowing = PreferenceHelper.getBoolean(
-                    context,
-                    preferences,
-                    R.string.setting_google_maps_follow_location
-                )
+                loadPreferences()
                 follow = keepFollowing
-            }
-            getString(R.string.setting_google_maps_follow_timeout) -> {
-                followingDelayTimeMs = PreferenceHelper.getLong(
-                    context,
-                    preferences,
-                    R.string.setting_google_maps_follow_timeout
-                )
-            }
-            getString(R.string.setting_google_maps_enable_polyline) -> {
-                showRoute = PreferenceHelper.getBoolean(
-                    context,
-                    preferences,
-                    R.string.setting_google_maps_enable_polyline
-                )
             }
         }
     }

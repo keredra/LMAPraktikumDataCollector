@@ -15,12 +15,17 @@ import androidx.lifecycle.Observer
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
+import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
 import java.util.prefs.PreferenceChangeEvent
 import java.util.prefs.PreferenceChangeListener
 
 class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
-    private var run = false;
+    private var run = false
+    private var gpsEnabled = false
+    private var networkEnabled = false
     private var activity: PermissionActivity
+    private var minTimeMs = 0L
+    private var minDistanceM = 0.0f
     private lateinit var model: GlobalModel
     private var locationManager: LocationManager
     private var preferences: SharedPreferences
@@ -33,7 +38,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
          */
         locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-
+        loadPreferences()
         preferences.registerOnSharedPreferenceChangeListener(this)
     }
 
@@ -67,19 +72,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
 
     @SuppressLint("MissingPermission")
     private fun addLocationRequests() {
-        val minTimeMs =
-            preferences.getString(activity.getString(R.string.setting_location_update_time), "0")!!
-                .toLong()
-        val minDistanceM = preferences.getString(
-            activity.getString(R.string.setting_location_min_distance),
-            "0.0"
-        )!!.toFloat()
-
-        if (preferences.getBoolean(
-                activity.getString(R.string.setting_location_enable_gps),
-                false
-            )
-        ) {
+        if (gpsEnabled) {
             activity.withPermission(Manifest.permission.ACCESS_FINE_LOCATION) {
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
@@ -90,11 +83,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             }
         }
 
-        if (preferences.getBoolean(
-                activity.getString(R.string.setting_location_enable_network),
-                false
-            )
-        ) {
+        if (networkEnabled) {
             activity.withPermission(Manifest.permission.ACCESS_COARSE_LOCATION) {
                 locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
@@ -135,10 +124,35 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
+    private fun loadPreferences() {
+        gpsEnabled = PreferenceHelper.getBoolean(
+            activity,
+            preferences,
+            R.string.setting_location_enable_gps
+        )
+        networkEnabled = PreferenceHelper.getBoolean(
+            activity,
+            preferences,
+            R.string.setting_location_enable_network
+        )
+        minTimeMs = PreferenceHelper.getLong(
+            activity,
+            preferences,
+            R.string.setting_location_update_time
+        )
+        minDistanceM = PreferenceHelper.getFloat(
+            activity,
+            preferences,
+            R.string.setting_location_min_distance
+        )
+    }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
             activity.getString(R.string.setting_location_enable_gps),
-            activity.getString(R.string.setting_location_enable_network) -> {
+            activity.getString(R.string.setting_location_enable_network),
+            activity.getString(R.string.setting_location_update_time),
+            activity.getString(R.string.setting_location_min_distance) -> {
+                loadPreferences()
                 if (run) {
                     removeLocationRequests()
                     addLocationRequests()
