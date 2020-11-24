@@ -25,8 +25,7 @@ import org.json.JSONObject
 class SensorDataFragment : Fragment() {
     private val model: GlobalModel by activityViewModels()
     private lateinit var preferences: SharedPreferences
-    var gyroList = ArrayList<SensorData>()
-    var accList = ArrayList<SensorData>()
+    var sensorList = ArrayList<SensorData>()
     /*
     TODO: Implementierung der gesammelten Sensordaten unterhalb der aktuellen Sensordaten in diesem Fragment
     */
@@ -41,11 +40,12 @@ class SensorDataFragment : Fragment() {
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         model.data.sensorEvents.observe(viewLifecycleOwner, Observer {
             val sensorEvents = it
+
             val adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, it)
             lvCurrentSensor.adapter = adapter
 
             if (!sensorEvents.isEmpty()) {
-                gyroList.add(sensorEvents.last())
+                sensorList.add(sensorEvents.last())
                 adapter.notifyDataSetChanged()
                     }
 

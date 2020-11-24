@@ -36,6 +36,7 @@ class LocationDataFragment : Fragment() {
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         model.data.locations.observe(viewLifecycleOwner, Observer {
             val locations = it
+
             val adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, it)
             lvCurrentLocation.adapter = adapter
 
