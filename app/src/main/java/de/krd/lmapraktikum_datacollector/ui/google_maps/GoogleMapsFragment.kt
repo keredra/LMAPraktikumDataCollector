@@ -53,7 +53,6 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         preferences = PreferenceManager.getDefaultSharedPreferences(requireActivity())
-        preferences.registerOnSharedPreferenceChangeListener(this)
 
         loadPreferences()
 
@@ -67,11 +66,13 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
 
     override fun onResume() {
         super.onResume()
+        preferences.registerOnSharedPreferenceChangeListener(this)
         mapView.onResume()
     }
 
     override fun onPause() {
         mapView.onPause()
+        preferences.unregisterOnSharedPreferenceChangeListener(this)
         super.onPause()
     }
 
