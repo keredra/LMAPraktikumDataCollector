@@ -22,17 +22,17 @@ class DataCollection {
 
         val jsonLocations = jsonObject.getJSONArray("locations")
         for (i in 0 until jsonLocations.length()) {
-            val jsonLocation = jsonLocations.getString(i)
+            val jsonLocation = jsonLocations.getJSONObject(i)
 
-            val location = gson.fromJson(jsonLocation, LocationData::class.java)
+            val location = gson.fromJson(jsonLocation.toString(), LocationData::class.java)
             locations.add(location)
         }
 
         val jsonSensorEvents = jsonObject.getJSONArray("sensor_events")
         for (i in 0 until jsonSensorEvents.length()) {
-            val jsonSensorEvent = jsonSensorEvents.getString(i)
+            val jsonSensorEvent = jsonSensorEvents.getJSONObject(i)
 
-            val sensorData = gson.fromJson(jsonSensorEvent, SensorData::class.java)
+            val sensorData = gson.fromJson(jsonSensorEvent.toString(), SensorData::class.java)
             sensorEvents.add(sensorData)
         }
     }
@@ -43,13 +43,13 @@ class DataCollection {
 
         var jsonLocations = JSONArray()
         locations.value.forEach {
-            jsonLocations.put(gson.toJson(it))
+            jsonLocations.put(JSONObject(gson.toJson(it)))
         }
         json.put("locations", jsonLocations)
 
         var jsonSensorEvents = JSONArray()
         sensorEvents.value.forEach {
-            jsonSensorEvents.put(gson.toJson(it))
+            jsonSensorEvents.put(JSONObject(gson.toJson(it)))
         }
         json.put("sensor_events", jsonSensorEvents)
 

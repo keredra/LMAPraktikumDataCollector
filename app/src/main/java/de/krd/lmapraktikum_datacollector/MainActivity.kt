@@ -3,6 +3,7 @@ package de.krd.lmapraktikum_datacollector
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.ParcelFileDescriptor
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -20,8 +21,6 @@ import de.krd.lmapraktikum_datacollector.recorder.LocationRecorder
 import de.krd.lmapraktikum_datacollector.recorder.SensorRecorder
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.*
-import kotlin.jvm.Throws
-import kotlin.math.log
 
 
 class MainActivity : PermissionActivity() {
@@ -60,11 +59,11 @@ class MainActivity : PermissionActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home,
-                R.id.nav_location_data,
-                R.id.nav_sensor_data
-            ), drawerLayout
+                setOf(
+                        R.id.nav_home,
+                        R.id.nav_location_data,
+                        R.id.nav_sensor_data
+                ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
@@ -105,14 +104,15 @@ class MainActivity : PermissionActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
     override fun onActivityResult(
-        requestCode: Int, resultCode: Int,
-        resultData: Intent?
+            requestCode: Int, resultCode: Int,
+            resultData: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, resultData)
         var currentUri: Uri? = null
@@ -127,8 +127,8 @@ class MainActivity : PermissionActivity() {
                     currentUri = resultData.data!!
                     try {
                         val content: String? = readFileContent(currentUri)
-                        Log.i("FileReader", ""+content)
-                        model.data.loadJSON(""+content)
+                        Log.i("FileReader", "" + content)
+                        model.data.loadJSON("" + content)
                     } catch (e: IOException) {
                         // Handle error here
                     }
@@ -136,31 +136,35 @@ class MainActivity : PermissionActivity() {
             }
         }
     }
+
     @Throws(IOException::class)
     private fun readFileContent(uri: Uri): String? {
-        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val inputStream: InputStream = contentResolver.openInputStream(uri)!!
         val reader = BufferedReader(
-            InputStreamReader(
-                inputStream
-            )
+                InputStreamReader(
+                        inputStream
+                )
         )
         val stringBuilder = StringBuilder()
         reader.forEachLine {
             stringBuilder.append(it)
         }
-        inputStream?.close()
+        reader.close()
+        inputStream.close()
         return stringBuilder.toString()
     }
 
     private fun writeFileContent(uri: Uri, content: String) {
         try {
-            val pfd = this.contentResolver.openFileDescriptor(uri, "w")
-            val fileOutputStream = FileOutputStream(
-                pfd!!.fileDescriptor
-            )
-            fileOutputStream.write(content.toByteArray())
+            val pfd = contentResolver.openFileDescriptor(uri, "w")!!
+            val fileOutputStream = FileOutputStream(pfd.fileDescriptor)
+            fileOutputStream.channel.truncate(0)
+
+            val bufferedWriter = fileOutputStream.bufferedWriter()
+            bufferedWriter.write(content)
+            bufferedWriter.close()
+            fileOutputStream.flush()
             fileOutputStream.close()
-            pfd!!.close()
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
         } catch (e: IOException) {
