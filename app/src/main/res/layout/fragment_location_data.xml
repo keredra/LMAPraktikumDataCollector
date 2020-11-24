@@ -7,10 +7,11 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     tools:context=".ui.location_data.LocationDataFragment">
-    <TextView
-        android:id="@+id/tvCurrentLocation"
+
+    <ListView
+        android:id="@+id/lvCurrentLocation"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        />
+        android:layout_marginBottom="3dp" />
 
 </RelativeLayout>

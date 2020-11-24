@@ -14,11 +14,11 @@
             android:title="@string/menu_google_maps" />
         <item
             android:id="@+id/nav_location_data"
-            android:icon="@drawable/ic_menu_map"
+            android:icon="@android:drawable/ic_menu_recent_history"
             android:title="@string/menu_location_data" />
         <item
             android:id="@+id/nav_sensor_data"
-            android:icon="@drawable/ic_menu_map"
+            android:icon="@android:drawable/ic_menu_recent_history"
             android:title="Sensordaten" />
     </group>
 </menu>
