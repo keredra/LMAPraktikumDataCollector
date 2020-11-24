@@ -21,7 +21,6 @@ import de.krd.lmapraktikum_datacollector.data.SensorData
 import kotlinx.android.synthetic.main.fragment_sensor_data.*
 import org.json.JSONObject
 
-@Suppress("DEPRECATION")
 class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
     private val model: GlobalModel by activityViewModels()
     // Wofür?
