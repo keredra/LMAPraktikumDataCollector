@@ -22,10 +22,12 @@ import kotlinx.android.synthetic.main.fragment_sensor_data.*
 import org.json.JSONObject
 
 @Suppress("DEPRECATION")
-class SensorDataFragment : Fragment() {
+class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
     private val model: GlobalModel by activityViewModels()
-    private lateinit var preferences: SharedPreferences
-    var sensorList = ArrayList<SensorData>()
+    // Wofür?
+    //private lateinit var preferences: SharedPreferences
+    private lateinit var arrayAdapter: ArrayAdapter<SensorData>
+
     /*
     TODO: Implementierung der gesammelten Sensordaten unterhalb der aktuellen Sensordaten in diesem Fragment
     */
@@ -37,18 +39,23 @@ class SensorDataFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        model.data.sensorEvents.observe(viewLifecycleOwner, Observer {
-            val sensorEvents = it
+        // Wofür?
+        //preferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
-            val adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, it)
-            lvCurrentSensor.adapter = adapter
+        arrayAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, model.data.sensorEvents.value)
+        lvCurrentSensor.adapter = arrayAdapter
+    }
 
-            if (!sensorEvents.isEmpty()) {
-                sensorList.add(sensorEvents.last())
-                adapter.notifyDataSetChanged()
-                    }
+    override fun onResume() {
+        super.onResume()
+        model.data.sensorEvents.observe(viewLifecycleOwner, this)
+    }
 
-        })
+    override fun onPause() {
+        model.data.sensorEvents.removeObserver(this)
+        super.onPause()
+    }
+    override fun onChanged(sensorEvents: MutableList<SensorData>?) {
+        arrayAdapter.notifyDataSetChanged()
     }
 }
