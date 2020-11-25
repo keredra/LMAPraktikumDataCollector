@@ -23,7 +23,7 @@ class LocationListviewAdapter(
         return dataSource.size
     }
 
-    override fun getItem(position: Int): Any {
+    override fun getItem(position: Int): LocationData {
         return dataSource[position]
     }
 

@@ -29,6 +29,7 @@ class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
         super.onViewCreated(view, savedInstanceState)
         val adapter = SensorListviewAdapter(requireActivity(), model.data.sensorEvents.value as ArrayList<SensorData>)
         lvCurrentSensor.adapter = adapter
+
     }
 
     override fun onChanged(t: MutableList<SensorData>?) {

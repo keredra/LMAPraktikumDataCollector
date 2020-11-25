@@ -22,7 +22,7 @@ class SensorListviewAdapter(
         return dataSource.size
     }
 
-    override fun getItem(position: Int): Any {
+    override fun getItem(position: Int): SensorData {
         return dataSource[position]
     }
 

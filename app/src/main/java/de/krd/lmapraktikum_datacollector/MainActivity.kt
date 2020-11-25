@@ -21,6 +21,7 @@ import de.krd.lmapraktikum_datacollector.recorder.LocationRecorder
 import de.krd.lmapraktikum_datacollector.recorder.SensorRecorder
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.*
+import kotlin.jvm.Throws
 
 
 class MainActivity : PermissionActivity() {
