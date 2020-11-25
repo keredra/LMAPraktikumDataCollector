@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.data.LocationData
@@ -28,9 +29,11 @@ class LocationDataFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = LocationListviewAdapter(requireActivity(),
-            model.data.locations.value as ArrayList<LocationData>)
-        lvCurrentLocation.adapter = adapter
-        adapter.notifyDataSetChanged()
+        model.data.locations.observe(viewLifecycleOwner, Observer {
+            val adapter = LocationListviewAdapter(requireActivity(),
+                    model.data.locations.value as ArrayList<LocationData>)
+            lvCurrentLocation.adapter = adapter
+        })
+        //adapter.notifyDataSetChanged()
     }
 }

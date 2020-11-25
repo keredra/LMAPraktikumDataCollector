@@ -1,13 +1,20 @@
 package de.krd.lmapraktikum_datacollector.ui.home
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.data.LocationData
@@ -21,6 +28,7 @@ import kotlin.collections.ArrayList
 class HomeFragment : Fragment(), Observer<MutableList<SensorData>>  {
     private val model: GlobalModel by activityViewModels()
     private lateinit var arrayAdapter: ArrayAdapter<SensorData>
+    private lateinit var preferences: SharedPreferences
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -28,8 +36,32 @@ class HomeFragment : Fragment(), Observer<MutableList<SensorData>>  {
     ): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
+    @SuppressLint("NewApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val seekBar = seekBar
+        seekBar.min=10000
+        seekBar.max=5000000
+        preferences = getDefaultSharedPreferences(context)
+        seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val samplingRate = progress.toLong()
+
+                val preferencesEditor = preferences.edit()
+                Log.d("Progress", samplingRate.toString())
+                preferencesEditor.putLong("@string/setting_sensor_sampling_period",samplingRate)
+                preferencesEditor.commit()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+        })
         model.data.sensorEvents.observe(viewLifecycleOwner, Observer {
             val adapter = SensorListviewAdapter(requireActivity(), model.data.sensorEvents.value.filter {it.type == 1 } as ArrayList<SensorData>)
             if(adapter.getCount()>1) {
