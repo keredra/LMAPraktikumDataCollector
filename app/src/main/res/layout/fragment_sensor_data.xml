@@ -1,16 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".ui.sensor_data.SensorDataFragment">
 
-    <ListView
-        android:id="@+id/lvCurrentSensor"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <LinearLayout
+        android:id = "@+id/relativeLayout1"
+        android:layout_width = "fill_parent"
+        android:layout_height = "wrap_content"
+        tools:ignore="MissingConstraints">
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="TIME"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="TYPE"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width = "25dp"
+            android:layout_height = "wrap_content"
+            android:layout_weight = "1.5"
+            android:gravity = "center"
+            android:padding = "4dp"
+            android:text = "X"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width = "25dp"
+            android:layout_height = "wrap_content"
+            android:layout_weight = "1.5"
+            android:gravity = "center"
+            android:padding = "4dp"
+            android:text = "Y"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width = "25dp"
+            android:layout_height = "wrap_content"
+            android:layout_weight = "1.5"
+            android:gravity = "center"
+            android:padding = "4dp"
+            android:text = "Z"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <ListView
+        android:id = "@+id/lvCurrentSensor"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:divider = "@null"
+        tools:ignore="MissingConstraints" />
+</androidx.constraintlayout.widget.ConstraintLayout>

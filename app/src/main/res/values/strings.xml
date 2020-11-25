@@ -94,4 +94,7 @@
     <string name="alt">ALT</string>
     <string name="acc">ACC</string>
     <string name="longit">longit</string>
+    <string name="type" />
+    <string name="name" />
+    <string name="values" />
 </resources>
