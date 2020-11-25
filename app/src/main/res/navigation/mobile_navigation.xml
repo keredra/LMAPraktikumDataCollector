@@ -47,7 +47,7 @@
     <fragment
         android:id="@+id/nav_location_data"
         android:name="de.krd.lmapraktikum_datacollector.ui.location_data.LocationDataFragment"
-        android:label="LocationDataFragment"
+        android:label="Lokalisierungsdaten"
         tools:layout="@layout/fragment_location_data" >
         <action
             android:id="@+id/action_locationDataFragment_to_nav_home"
@@ -64,7 +64,7 @@
     <fragment
         android:id="@+id/nav_sensor_data"
         android:name="de.krd.lmapraktikum_datacollector.ui.sensor_data.SensorDataFragment"
-        android:label="SensorDataFragment" >
+        android:label="Sensordaten" >
         <action
             android:id="@+id/action_nav_settings_to_nav_home"
             app:destination="@id/nav_home" />
