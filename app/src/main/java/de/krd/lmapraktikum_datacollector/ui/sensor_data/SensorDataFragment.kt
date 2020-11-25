@@ -23,13 +23,8 @@ import org.json.JSONObject
 
 class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
     private val model: GlobalModel by activityViewModels()
-    // Wofür?
-    //private lateinit var preferences: SharedPreferences
     private lateinit var arrayAdapter: ArrayAdapter<SensorData>
 
-    /*
-    TODO: Implementierung der gesammelten Sensordaten unterhalb der aktuellen Sensordaten in diesem Fragment
-    */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -38,8 +33,6 @@ class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Wofür?
-        //preferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
         arrayAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, model.data.sensorEvents.value)
         lvCurrentSensor.adapter = arrayAdapter

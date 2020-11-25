@@ -34,7 +34,13 @@ class LocationDataFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        model.data.locations.observe(viewLifecycleOwner, Observer {
+
+        val adapter = LocationListviewAdapter(requireActivity(),
+            model.data.locations.value as ArrayList<LocationData>)
+        lvCurrentLocation.adapter = adapter
+        adapter.notifyDataSetChanged()
+
+        /*model.data.locations.observe(viewLifecycleOwner, Observer {
             val locations = it
 
             val adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, it)
@@ -44,6 +50,6 @@ class LocationDataFragment : Fragment() {
                 locationList.add(locations.last())
                 adapter.notifyDataSetChanged()
             }
-        })
+        })*/
     }
 }

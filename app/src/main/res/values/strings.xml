@@ -88,4 +88,10 @@
     <string name="setting_google_maps_show_accuracy_summary_on">Die Genauigkeit wird auf der Karte dargestellt</string>
     <string name="setting_google_maps_show_accuracy_summary_off">keine Genauigkeitsanzeige</string>
     <string name="action_delete_data">Daten löschen</string>
+    <string name="time">TIME</string>
+    <string name="prov">PROV</string>
+    <string name="lat">LAT</string>
+    <string name="alt">ALT</string>
+    <string name="acc">ACC</string>
+    <string name="longit">longit</string>
 </resources>
