@@ -9,15 +9,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.data.LocationData
+import de.krd.lmapraktikum_datacollector.data.SensorData
 import kotlinx.android.synthetic.main.fragment_location_data.lvCurrentLocation
 
-class LocationDataFragment : Fragment() {
+class LocationDataFragment : Fragment(), Observer<MutableList<LocationData>> {
     private val model: GlobalModel by activityViewModels()
+    private lateinit var adapter: ArrayAdapter<LocationData>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +37,22 @@ class LocationDataFragment : Fragment() {
                     model.data.locations.value as ArrayList<LocationData>)
             lvCurrentLocation.adapter = adapter
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        model.data.locations.observe(viewLifecycleOwner, this)
+    }
+
+
+    override fun onPause() {
+        model.data.locations.removeObserver(this)
+        super.onPause()
+    }
+
+
+    override fun onChanged(t: MutableList<LocationData>?) {
+        adapter.notifyDataSetChanged()
     }
 
 
