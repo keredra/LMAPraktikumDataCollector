@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_location_data.lvCurrentLocation
 
 class LocationDataFragment : Fragment(), Observer<MutableList<LocationData>> {
     private val model: GlobalModel by activityViewModels()
-    private lateinit var adapter: ArrayAdapter<LocationData>
+    private lateinit var adapter: LocationListviewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,11 +32,8 @@ class LocationDataFragment : Fragment(), Observer<MutableList<LocationData>> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        model.data.locations.observe(viewLifecycleOwner, Observer {
-            val adapter = LocationListviewAdapter(requireActivity(),
-                    model.data.locations.value as ArrayList<LocationData>)
-            lvCurrentLocation.adapter = adapter
-        })
+        adapter = LocationListviewAdapter(requireActivity(), model.data.locations.value as ArrayList<LocationData>)
+        lvCurrentLocation.adapter = adapter
     }
 
     override fun onResume() {

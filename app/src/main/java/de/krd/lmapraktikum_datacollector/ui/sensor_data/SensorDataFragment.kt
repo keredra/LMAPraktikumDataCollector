@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_sensor_data.*
 
 class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
     private val model: GlobalModel by activityViewModels()
-    private lateinit var adapter: ArrayAdapter<SensorData>
+    private lateinit var adapter: SensorListviewAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -27,12 +27,10 @@ class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        model.data.sensorEvents.observe(viewLifecycleOwner, Observer {
-            val adapter = SensorListviewAdapter(requireActivity(), model.data.sensorEvents.value as ArrayList<SensorData>)
-            lvCurrentSensor.adapter = adapter
-        })
-
+        adapter = SensorListviewAdapter(requireActivity(), model.data.sensorEvents.value as ArrayList<SensorData>)
+        lvCurrentSensor.adapter = adapter
     }
+
     override fun onResume() {
         super.onResume()
         model.data.sensorEvents.observe(viewLifecycleOwner, this)
