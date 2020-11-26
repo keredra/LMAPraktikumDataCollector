@@ -32,8 +32,8 @@ class SensorListviewAdapter(
 
     private class ViewHolder(convertView: View) {
         var mTime: TextView? = null
-        var mType: TextView? = null
-        //var mName: TextView? = null
+        //var mType: TextView? = null
+        var mName: TextView? = null
         var mValueX: TextView? = null
         var mValueY: TextView? = null
         var mValueZ: TextView? = null
@@ -49,8 +49,8 @@ class SensorListviewAdapter(
             convertView.setTag(holder)
 
             holder.mTime = convertView!!.findViewById<View>(R.id.tv_loRowTime) as TextView
-            holder.mType = convertView.findViewById<View>(R.id.tv_loRowType) as TextView
-            //holder.mName = convertView.findViewById<View>(R.id.tv_loRowName) as TextView
+            //holder.mType = convertView.findViewById<View>(R.id.tv_loRowType) as TextView
+            holder.mName = convertView.findViewById<View>(R.id.tv_loRowName) as TextView
             holder.mValueX = convertView.findViewById<View>(R.id.tv_loRowValueX) as TextView
             holder.mValueY = convertView.findViewById<View>(R.id.tv_loRowValueY) as TextView
             holder.mValueZ = convertView.findViewById<View>(R.id.tv_loRowValueZ) as TextView
@@ -63,8 +63,14 @@ class SensorListviewAdapter(
 
         val date = Date(item.timestamp)
         holder.mTime?.setText(date.toString())
-        holder.mType?.setText(item.type.toString())
         //holder.mName?.setText(item.name)
+        //holder.mType?.setText(item.type.toString())
+        if(item.name.contains("Accelerometer")){
+            holder.mName?.setText("ACC")
+        }
+        if(item.name.contains("Gyroscope")){
+            holder.mName?.setText("GYRO")
+        }
         holder.mValueX?.setText(item.values[0].toString())
         holder.mValueY?.setText(item.values[1].toString())
         holder.mValueZ?.setText(item.values[2].toString())

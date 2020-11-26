@@ -27,7 +27,7 @@
             android:text="@string/time" />
 
         <TextView
-            android:id="@+id/tv_loRowType"
+            android:id="@+id/tv_loRowName"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
