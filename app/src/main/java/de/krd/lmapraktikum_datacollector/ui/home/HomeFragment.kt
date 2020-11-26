@@ -70,15 +70,15 @@ class HomeFragment : Fragment(), Observer<MutableList<SensorData>>  {
             if(accelerometerDataList.size > 1) {
                 val currentAccelerometer = accelerometerDataList.get(accelerometerDataList.size-1)
                 val lastAccelerometer = accelerometerDataList.get(accelerometerDataList.size-2)
-                tv_currAcc.text = "Aktuelle Accelerometerwerte (X, Y, Z, Timestamp):\n" +currentAccelerometer.values[0]+", "+currentAccelerometer.values[1]+", "+currentAccelerometer.values[2]+", "+ Date(currentAccelerometer.timestamp)
-                tv_lastAcc.text = "Letzte Accelerometerwerte (X, Y, Z, Timestamp):\n" +lastAccelerometer.values[0]+", "+lastAccelerometer.values[1]+", "+lastAccelerometer.values[2]+", "+Date(lastAccelerometer.timestamp)
+                tv_currAcc.text = "Aktuelle Accelerometerwerte (X, Y, Z, Timestamp):\n" +currentAccelerometer.values[0]+", "+currentAccelerometer.values[1]+", "+currentAccelerometer.values[2]+"\n "+ Date(currentAccelerometer.timestamp)
+                tv_lastAcc.text = "Letzte Accelerometerwerte (X, Y, Z, Timestamp):\n" +lastAccelerometer.values[0]+", "+lastAccelerometer.values[1]+", "+lastAccelerometer.values[2]+"\n "+Date(lastAccelerometer.timestamp)
                 tv_currSampRateAcc.text = "Aktuelle Abtastrate Accelerometer: " +(currentAccelerometer.timestamp-lastAccelerometer.timestamp)
             }
             if (gyroscopeDataList.size > 1) {
                 val currentGyroskop = gyroscopeDataList.get(gyroscopeDataList.size - 1)
                 val lastGyroskop = gyroscopeDataList.get(gyroscopeDataList.size - 2)
-                tv_currGyro.text = "Aktuelle Gyroskopwerte (X, Y, Z, Timestamp):\n" + currentGyroskop.values[0] + ", " + currentGyroskop.values[1] + ", " + currentGyroskop.values[2] + ", " + Date(currentGyroskop.timestamp)
-                tv_lastGyro.text = "Letzte Gyroskopwerte (X, Y, Z, Timestamp):\n" + lastGyroskop.values[0] + ", " + lastGyroskop.values[1] + ", " + lastGyroskop.values[2] + ", " + Date(lastGyroskop.timestamp)
+                tv_currGyro.text = "Aktuelle Gyroskopwerte (X, Y, Z, Timestamp):\n" + currentGyroskop.values[0] + ", " + currentGyroskop.values[1] + ", " + currentGyroskop.values[2] + "\n " + Date(currentGyroskop.timestamp)
+                tv_lastGyro.text = "Letzte Gyroskopwerte (X, Y, Z, Timestamp):\n" + lastGyroskop.values[0] + ", " + lastGyroskop.values[1] + ", " + lastGyroskop.values[2] + "\n " + Date(lastGyroskop.timestamp)
                 tv_currSampRateGyro.text = "Aktuelle Abtastrate Gyroskop: " + (currentGyroskop.timestamp - lastGyroskop.timestamp)
             }
         }
@@ -86,8 +86,8 @@ class HomeFragment : Fragment(), Observer<MutableList<SensorData>>  {
             if(locationDataList.size > 1) {
                 val currentLocation = locationDataList.get(locationDataList.size - 1)
                 val lastLocation = locationDataList.get(locationDataList.size - 2)
-                tv_currLocation.text = "Aktuelle Positionsdaten (Latitude, Longitude, Altitude, Timestamp):\n" + currentLocation.latitude + ", " + currentLocation.longitude + ", " + currentLocation.altitude + ", " + Date(currentLocation.timestamp)
-                tv_lastLocation.text = "Letzte Positionsdaten (Latitude, Longitude, Altitude, Timestamp):\n" + lastLocation.latitude + ", " + lastLocation.longitude + ", " + lastLocation.altitude + ", " + Date(lastLocation.timestamp)
+                tv_currLocation.text = "Aktuelle Positionsdaten (Latitude, Longitude, Altitude, Timestamp):\n" + currentLocation.latitude + ", " + currentLocation.longitude + ", " + currentLocation.altitude + "\n " + Date(currentLocation.timestamp)
+                tv_lastLocation.text = "Letzte Positionsdaten (Latitude, Longitude, Altitude, Timestamp):\n" + lastLocation.latitude + ", " + lastLocation.longitude + ", " + lastLocation.altitude + "\n " + Date(lastLocation.timestamp)
                 tv_currSampRateLocation.text = "Aktuelle Abtastrate Position: " + (currentLocation.timestamp - lastLocation.timestamp)
             }
         }
