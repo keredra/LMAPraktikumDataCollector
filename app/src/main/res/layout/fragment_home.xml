@@ -99,6 +99,8 @@
         android:layout_marginStart="177dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="177dp"
+        android:min="10000"
+        android:max="500000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
