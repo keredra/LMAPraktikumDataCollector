@@ -34,6 +34,7 @@ class LocationDataFragment : Fragment() {
                     model.data.locations.value as ArrayList<LocationData>)
             lvCurrentLocation.adapter = adapter
         })
-        //adapter.notifyDataSetChanged()
     }
+
+
 }
