@@ -68,11 +68,16 @@
             android:defaultValue="0.0"
             android:inputType="numberDecimal"
             android:digits="1234567890."
-            android:key="@string/setting_location_min_distance"
+            android:key="setting_location_min_distance"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/setting_location_min_distance_title" />
-
+        <ListPreference
+            android:key="setting_location_priority"
+            android:title="Priority"
+            android:entries="@array/listPriority"
+            android:entryValues="@array/listPriority"
+            />
 
     </PreferenceCategory>
 
@@ -91,6 +96,7 @@
             app:summaryOff="@string/setting_sensor_enable_accelerometer_summary_off"
             app:summaryOn="@string/setting_sensor_enable_accelerometer_summary_on"
             app:title="@string/setting_sensor_enable_accelerometer_title" />
+
         <EditTextPreference
             android:defaultValue="1000000"
             android:inputType="number"
