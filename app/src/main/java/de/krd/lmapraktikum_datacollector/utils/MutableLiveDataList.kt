@@ -28,7 +28,7 @@ class MutableLiveDataList<T> : MutableLiveData<MutableList<T>>() {
         return value.size
     }
 
-    private fun notifyObserver() {
+    fun notifyObserver() {
         postValue(value)
     }
 }

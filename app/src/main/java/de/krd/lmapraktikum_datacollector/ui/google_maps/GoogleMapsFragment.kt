@@ -1,51 +1,69 @@
 package de.krd.lmapraktikum_datacollector.ui.google_maps
 
+import android.app.Activity
+import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
-import android.location.Location
+import android.opengl.Visibility
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.CancelableCallback
-import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener
+import com.google.android.gms.maps.GoogleMap.*
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.data.LocationData
+import de.krd.lmapraktikum_datacollector.data.PositionEvaluationData
 import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
+import kotlinx.android.synthetic.main.route_control.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.lang.Exception
+
 
 class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private val model: GlobalModel by activityViewModels()
     private var polyline: Polyline? = null
     private var follow = true
     private var animationInProgress = false
-    private var followJob: Job? = null;
+    private var followJob: Job? = null
     private var zoomFactor = 0.0f
     private var keepFollowing = true
     private var followingDelayTimeMs = 10000L
-    private var showRoute = false;
-    private var showAccuracy = false;
+    private var showRoute = false
+    private var showAccuracy = false
+
+    private var routeStarted = false
     private lateinit var map: GoogleMap
     private lateinit var mapView: MapView
     private lateinit var preferences: SharedPreferences
+
     private val listOfCircles = mutableListOf<Circle>()
+    private val listOfMarker = mutableListOf<Marker>()
+
+    private lateinit var locationsObserver: Observer<MutableList<LocationData>>
+    private lateinit var routeObserver: Observer<MutableList<PositionEvaluationData>>
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_google_maps, container, false)
     }
@@ -62,17 +80,26 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
         mapView.getMapAsync(this)
         animationInProgress = false
 
+        locationsObserver = Observer { onLocationChange(it) }
+        routeObserver = Observer { onPositionEvaluationRouteChange(it) }
+
+        btnRouteStartNext.setOnClickListener { onStartNextButtonClick() }
+        btnReset.setOnClickListener { onResetButtonClick() }
     }
 
     override fun onResume() {
         super.onResume()
-        preferences.registerOnSharedPreferenceChangeListener(this)
         mapView.onResume()
+        preferences.registerOnSharedPreferenceChangeListener(this)
+        model.data.locations.observe(viewLifecycleOwner, locationsObserver)
+        model.evaluationData.route.observe(viewLifecycleOwner, routeObserver)
     }
 
     override fun onPause() {
         mapView.onPause()
         preferences.unregisterOnSharedPreferenceChangeListener(this)
+        model.data.locations.removeObserver(locationsObserver)
+        model.evaluationData.route.removeObserver(routeObserver)
         super.onPause()
     }
 
@@ -87,11 +114,47 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     override fun onMapReady(googleMap: GoogleMap?) {
         this.map = googleMap!!
 
-        model.data.locations.observe(viewLifecycleOwner, Observer {
-            onLocationChange(it)
+        this.map.setOnMapClickListener(OnMapClickListener { position -> // TODO Auto-generated method stub
+            if (!routeStarted)
+                model.evaluationData.route.add(PositionEvaluationData(position, 0))
         })
 
         map.setOnCameraMoveStartedListener(this)
+    }
+
+    private fun onPositionEvaluationRouteChange(route: MutableList<PositionEvaluationData>) {
+        var i = 0
+        listOfMarker.forEach { it.remove() }
+        listOfMarker.clear()
+        var actual = routeStarted
+        route.forEach { positionEvaluationData ->
+            var drawableId = R.drawable.ic_location_on_red
+            if (actual) {
+                drawableId = R.drawable.ic_location_on_yellow
+
+                if (positionEvaluationData.timestamp == 0L) {
+                    actual = false
+                } else {
+                    drawableId = R.drawable.ic_location_on_green
+                }
+            }
+
+            listOfMarker.add(
+                    map.addMarker(
+                            getRouteLocationMarkerOptions(
+                                    positionEvaluationData.latLng, "" + (++i), drawableId)))
+        }
+
+        clRouteControl.visibility = if (route.size == 0) View.INVISIBLE else View.VISIBLE
+
+
+    }
+    private fun getRouteLocationMarkerOptions(latLng: LatLng, label: String, drawableId: Int) : MarkerOptions {
+        val rActivity = requireActivity()
+        val view = (rActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.route_marker, null)
+        view.findViewById<TextView>(R.id.num_txt).text = label
+        view.findViewById<ImageView>(R.id.marker_tag).setImageDrawable(rActivity.getDrawable(drawableId))
+        return MarkerOptions().position(latLng).title(latLng.toString()).icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(rActivity, view)))
     }
 
     private fun onLocationChange(locations: MutableList<LocationData>) {
@@ -148,19 +211,19 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
                 val lastLocation = locations.last();
                 animationInProgress = true
                 map.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                        LatLng(lastLocation.latitude, lastLocation.longitude),
-                        zoomFactor
-                    ),
-                    object : CancelableCallback {
-                        override fun onFinish() {
-                            animationInProgress = false
-                        }
+                        CameraUpdateFactory.newLatLngZoom(
+                                LatLng(lastLocation.latitude, lastLocation.longitude),
+                                zoomFactor
+                        ),
+                        object : CancelableCallback {
+                            override fun onFinish() {
+                                animationInProgress = false
+                            }
 
-                        override fun onCancel() {
-                            animationInProgress = false
+                            override fun onCancel() {
+                                animationInProgress = false
+                            }
                         }
-                    }
                 )
             }
 
@@ -180,33 +243,57 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
         }
     }
 
+    private fun onStartNextButtonClick() {
+        if (routeStarted) {
+            try {
+                val position = model.evaluationData.route.value.first { it.timestamp == 0L }
+                position.timestamp = System.currentTimeMillis()
+                model.evaluationData.route.notifyObserver()
+            } catch (e: Exception) {}
+        } else {
+            routeStarted = true
+            btnRouteStartNext.text = getString(R.string.next)
+            btnRouteStartNext.setBackgroundColor(requireActivity().getColor(R.color.design_default_color_secondary))
+            model.evaluationData.route.notifyObserver()
+        }
+
+    }
+
+    private fun onResetButtonClick() {
+        routeStarted = false
+        model.evaluationData.route.value.forEach { it.timestamp = 0L }
+        model.evaluationData.route.notifyObserver()
+        btnRouteStartNext.text = getString(R.string.start)
+        btnRouteStartNext.setBackgroundColor(requireActivity().getColor(R.color.design_default_color_primary))
+    }
+
     private fun loadPreferences() {
         val context = requireContext()
         zoomFactor = PreferenceHelper.getFloat(
-            context,
-            preferences,
-            R.string.setting_google_maps_zoom_factor
+                context,
+                preferences,
+                R.string.setting_google_maps_zoom_factor
         )
         keepFollowing = PreferenceHelper.getBoolean(
-            context,
-            preferences,
-            R.string.setting_google_maps_follow_location
+                context,
+                preferences,
+                R.string.setting_google_maps_follow_location
         )
         followingDelayTimeMs = PreferenceHelper.getLong(
-            context,
-            preferences,
-            R.string.setting_google_maps_follow_timeout
+                context,
+                preferences,
+                R.string.setting_google_maps_follow_timeout
         )
         showRoute = PreferenceHelper.getBoolean(
-            context,
-            preferences,
-            R.string.setting_google_maps_enable_polyline
+                context,
+                preferences,
+                R.string.setting_google_maps_enable_polyline
         )
 
         showAccuracy = PreferenceHelper.getBoolean(
-            context,
-            preferences,
-            R.string.setting_google_maps_show_accuracy
+                context,
+                preferences,
+                R.string.setting_google_maps_show_accuracy
         )
     }
 
@@ -224,5 +311,19 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
             }
         }
     }
-
+    companion object {
+        // Convert a view to bitmap
+        fun createDrawableFromView(context: Context, view: View): Bitmap? {
+            val displayMetrics = DisplayMetrics()
+            (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+            view.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+            view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
+            view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
+            view.buildDrawingCache()
+            val bitmap = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            view.draw(canvas)
+            return bitmap
+        }
+    }
 }

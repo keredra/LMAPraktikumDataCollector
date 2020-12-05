@@ -102,6 +102,9 @@ class MainActivity : PermissionActivity() {
                 model.data.locations.clear()
                 model.data.sensorEvents.clear()
             }
+            R.id.action_delete_route -> {
+                model.evaluationData.route.clear()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
