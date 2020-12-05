@@ -43,7 +43,7 @@ class HomeFragment : Fragment(), Observer<MutableList<SensorData>>  {
         val rActivity = requireActivity()
         preferences = getDefaultSharedPreferences(rActivity)
         preferencesEditor = preferences.edit()
-        val periodId = rActivity.getString(R.string.setting_sensor_sampling_period);
+        val periodId = rActivity.getString(R.string.setting_sensor_sampling_period)
 
         seekBar.progress = PreferenceHelper.getInt(rActivity, preferences, R.string.setting_sensor_sampling_period)
         seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
