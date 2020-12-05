@@ -1,17 +1,21 @@
 package de.krd.lmapraktikum_datacollector.data
 
-import android.hardware.SensorEvent
-import android.location.Location
-import android.provider.ContactsContract
+import android.util.Log
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import de.krd.lmapraktikum_datacollector.utils.MutableLiveDataList
 import org.json.JSONArray
 import org.json.JSONObject
+import org.w3c.dom.Element
+import org.w3c.dom.NodeList
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserFactory
+import java.io.StringReader
 
 class DataCollection {
     val locations = MutableLiveDataList<LocationData>()
     val sensorEvents = MutableLiveDataList<SensorData>()
-
+    val latLng = MutableLiveDataList<LatLng>()
 
     fun loadJSON(json: String) {
         locations.clear()
@@ -54,5 +58,33 @@ class DataCollection {
         json.put("sensor_events", jsonSensorEvents)
 
         return json.toString()
+    }
+
+    fun extractLatLng(string: String){
+        latLng.clear()
+        val factory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
+        factory.isNamespaceAware
+        val parser = factory.newPullParser()
+        parser.setInput(StringReader(string))
+        var eventType = parser.eventType
+
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            val tagName = parser.name
+            if (eventType == XmlPullParser.START_TAG) {
+                try {
+                    if (tagName.equals("rtept")) {
+                        val latitude = parser.getAttributeValue(0).toDouble()
+                        val longitude = parser.getAttributeValue(1).toDouble()
+                        val wayPoint = LatLng(latitude, longitude)
+                        latLng.add(wayPoint)
+                        Log.i("Waypoint", ""+wayPoint.latitude+","+wayPoint.longitude)
+                    }
+                } catch (e: Exception) {
+                    Log.e("Fehler", "Parsen nicht möglich")
+
+                }
+            }
+            eventType = parser.next()
+        }
     }
 }

@@ -12,6 +12,7 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="action_load_data">Daten laden</string>
     <string name="action_save_data">Daten speichern</string>
+    <string name="action_import_gpx">GPX-Datei importieren</string>
     <string name="menu_google_maps">Karte</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

@@ -3,7 +3,6 @@ package de.krd.lmapraktikum_datacollector
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.ParcelFileDescriptor
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -20,7 +19,10 @@ import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 import de.krd.lmapraktikum_datacollector.recorder.LocationRecorder
 import de.krd.lmapraktikum_datacollector.recorder.SensorRecorder
 import kotlinx.android.synthetic.main.app_bar_main.*
+import org.w3c.dom.Document
 import java.io.*
+import javax.xml.parsers.DocumentBuilder
+import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.jvm.Throws
 
 
@@ -33,6 +35,7 @@ class MainActivity : PermissionActivity() {
     companion object {
         private val OPEN_REQUEST_CODE = 41
         private val SAVE_REQUEST_CODE = 42
+        private val IMPORT_REQUEST_CODE=43
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,6 +108,12 @@ class MainActivity : PermissionActivity() {
             R.id.action_delete_route -> {
                 model.evaluationData.route.clear()
             }
+            R.id.action_import_gpx -> {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
+                intent.type = "*/*"
+                startActivityForResult(intent, IMPORT_REQUEST_CODE)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -133,6 +142,17 @@ class MainActivity : PermissionActivity() {
                         val content: String? = readFileContent(currentUri)
                         Log.i("FileReader", "" + content)
                         model.data.loadJSON("" + content)
+                    } catch (e: IOException) {
+                        // Handle error here
+                    }
+                }
+            } else if (requestCode == IMPORT_REQUEST_CODE){
+                if (resultData != null) {
+                    currentUri = resultData.data!!
+                    try {
+                        val content: String? = readFileContent(currentUri)
+                        Log.i("FileReader", "" + content)
+                        model.data.extractLatLng(""+content)
                     } catch (e: IOException) {
                         // Handle error here
                     }

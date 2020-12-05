@@ -11,11 +11,11 @@ data class SensorData(
     val values: FloatArray
 ) {
     companion object {
-        private val startUpTime = System.currentTimeMillis()
+        //private val startUpTime = System.currentTimeMillis()
 
         fun fromSensorEvent(sensorEvent: SensorEvent) : SensorData {
             return SensorData(
-                startUpTime + sensorEvent.timestamp / 1000000,
+                System.currentTimeMillis() + (sensorEvent.timestamp - SystemClock.elapsedRealtimeNanos()) / 1000000L,
                 sensorEvent.sensor.type,
                 sensorEvent.sensor.name,
                 sensorEvent.values
