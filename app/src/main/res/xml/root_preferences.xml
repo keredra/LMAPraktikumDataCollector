@@ -73,11 +73,11 @@
             android:singleLine="true"
             android:title="@string/setting_location_min_distance_title" />
         <ListPreference
-            android:key="setting_location_priority"
+            android:key="@string/setting_location_priority"
             android:title="Priority"
             android:entries="@array/listPriority"
-            android:entryValues="@array/listPriority"
-            />
+            android:entryValues="@array/listPriorityValues" />
+        <!-- default value muss hier noch rein-->
 
     </PreferenceCategory>
 
@@ -104,7 +104,5 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/setting_sensor_sampling_period_title" />
-
-
     </PreferenceCategory>
 </PreferenceScreen>

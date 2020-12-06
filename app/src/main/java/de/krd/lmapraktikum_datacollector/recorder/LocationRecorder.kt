@@ -6,19 +6,19 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Looper
 import android.preference.PreferenceManager
 import android.util.Log
-import androidx.lifecycle.Observer
+import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationRequest.*
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.data.LocationData
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
-import java.util.prefs.PreferenceChangeEvent
-import java.util.prefs.PreferenceChangeListener
+
 
 class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private var run = false
@@ -30,6 +30,12 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var model: GlobalModel
     private var locationManager: LocationManager
     private var preferences: SharedPreferences
+    private var fusedLocationProviderClient: FusedLocationProviderClient
+    var locationRequest: LocationRequest? = null
+    var interval = 10000 //
+    var fastestInterval = 5000 //This method sets the fastest rate in milliseconds at which your app can handle location updates
+    private var priority = PRIORITY_HIGH_ACCURACY
+
 
     constructor(activity: PermissionActivity, model: GlobalModel) {
         this.activity = activity;
@@ -38,9 +44,12 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
          * Get the location service
          */
         locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        fusedLocationProviderClient = FusedLocationProviderClient(this.activity) //wo soll ich das sonst initialisieren?
+        locationRequest = LocationRequest().setInterval(interval.toLong()).setFastestInterval(fastestInterval.toLong()).setPriority(priority)
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         loadPreferences()
         preferences.registerOnSharedPreferenceChangeListener(this)
+
     }
 
     private val locationListener = LocationListener { location ->
@@ -59,6 +68,25 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             )
 
             model.data.locations.add(locationData);
+        }
+    }
+
+    private val locationCallback = object: LocationCallback(){
+        override fun onLocationResult(location_result: LocationResult?) {
+            super.onLocationResult(location_result)
+            if(location_result != null && location_result.lastLocation != null ){
+                Log.d(
+                        location_result?.lastLocation?.provider, "lat: ${location_result?.lastLocation?.latitude}"
+                        + " lng: ${location_result?.lastLocation?.longitude}"
+                        + " alt: ${location_result?.lastLocation?.altitude}"
+                        + " acc: ${location_result?.lastLocation?.accuracy}"
+                )
+
+                val lastLocation = LocationData(location_result.lastLocation.time,location_result.lastLocation.provider,
+                        location_result.lastLocation.latitude,location_result.lastLocation.longitude,
+                        location_result.lastLocation.altitude,location_result.lastLocation.accuracy)
+                model.data.locations.add(lastLocation)
+            }
         }
     }
 
@@ -95,10 +123,34 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                 )
             }
         }
+
+        if(priority.equals(PRIORITY_HIGH_ACCURACY)){
+            locationRequest?.setInterval(minTimeMs)?.setFastestInterval(fastestInterval.toLong())?.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
+            Log.i("priority:", "HIGH_ACCURACY")
+            //TODO fastestIntervall muss man auch noch uebergeben koennen
+        }
+        if(priority.equals(PRIORITY_BALANCED_POWER_ACCURACY)){
+            locationRequest?.setInterval(minTimeMs)?.setFastestInterval(fastestInterval.toLong())?.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
+            Log.i("priority:", "BALANCED_POWER_ACCURACY")
+        }
+        if(priority.equals(PRIORITY_LOW_POWER)){
+            locationRequest?.setInterval(minTimeMs)?.setFastestInterval(fastestInterval.toLong())?.priority = LocationRequest.PRIORITY_LOW_POWER
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
+            Log.i("priority:", "LOW_POWER")
+        }
+        if(priority.equals(PRIORITY_NO_POWER)){
+            locationRequest?.setInterval(minTimeMs)?.setFastestInterval(fastestInterval.toLong())?.priority = LocationRequest.PRIORITY_NO_POWER
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
+            Log.i("priority:", "NO_POWER")
+        }
     }
+
 
     private fun removeLocationRequests() {
         locationManager.removeUpdates(locationListener)
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     private fun isLastProviderLocation(location: LocationData): Boolean {
@@ -147,12 +199,18 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             preferences,
             R.string.setting_location_min_distance
         )
+        priority = PreferenceHelper.getInt(
+                activity,
+                preferences,
+                R.string.setting_location_priority
+        )
     }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
-            activity.getString(R.string.setting_location_enable_gps),
-            activity.getString(R.string.setting_location_enable_network),
-            activity.getString(R.string.setting_location_update_time),
+            "setting_location_enable_gps",
+            "setting_location_enable_network",
+            "setting_location_update_time",
+            "setting_location_priority",
             activity.getString(R.string.setting_location_min_distance) -> {
                 loadPreferences()
                 if (run) {

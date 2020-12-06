@@ -102,4 +102,5 @@
     <string name="reset">Zurücksetzen</string>
     <string name="start">Start</string>
     <string name="next">weiter</string>
+    <string name="setting_location_priority" > setting_location_priority</string>
 </resources>
