@@ -68,7 +68,7 @@
             android:defaultValue="0.0"
             android:inputType="numberDecimal"
             android:digits="1234567890."
-            android:key="setting_location_min_distance"
+            android:key="@string/setting_location_min_distance"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/setting_location_min_distance_title" />
