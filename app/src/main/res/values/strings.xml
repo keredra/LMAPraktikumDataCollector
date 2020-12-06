@@ -99,7 +99,6 @@
     <string name="name" />
     <string name="values" />
     <string name="sensordaten">Sensordaten</string>
-    <string name="action_delete_route">Route löschen</string>
     <string name="reset">Zurücksetzen</string>
     <string name="start">Start</string>
     <string name="next">weiter</string>

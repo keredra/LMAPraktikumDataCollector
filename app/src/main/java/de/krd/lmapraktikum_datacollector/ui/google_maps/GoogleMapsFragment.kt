@@ -92,14 +92,14 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
         mapView.onResume()
         preferences.registerOnSharedPreferenceChangeListener(this)
         model.data.locations.observe(viewLifecycleOwner, locationsObserver)
-        model.evaluationData.route.observe(viewLifecycleOwner, routeObserver)
+        model.data.route.observe(viewLifecycleOwner, routeObserver)
     }
 
     override fun onPause() {
         mapView.onPause()
         preferences.unregisterOnSharedPreferenceChangeListener(this)
         model.data.locations.removeObserver(locationsObserver)
-        model.evaluationData.route.removeObserver(routeObserver)
+        model.data.route.removeObserver(routeObserver)
         super.onPause()
     }
 
@@ -116,7 +116,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
 
         this.map.setOnMapClickListener(OnMapClickListener { position -> // TODO Auto-generated method stub
             if (!routeStarted)
-                model.evaluationData.route.add(PositionEvaluationData(position, 0))
+                model.data.route.add(PositionEvaluationData(position, 0))
         })
 
         map.setOnCameraMoveStartedListener(this)
@@ -246,23 +246,23 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     private fun onStartNextButtonClick() {
         if (routeStarted) {
             try {
-                val position = model.evaluationData.route.value.first { it.timestamp == 0L }
+                val position = model.data.route.value.first { it.timestamp == 0L }
                 position.timestamp = System.currentTimeMillis()
-                model.evaluationData.route.notifyObserver()
+                model.data.route.notifyObserver()
             } catch (e: Exception) {}
         } else {
             routeStarted = true
             btnRouteStartNext.text = getString(R.string.next)
             btnRouteStartNext.setBackgroundColor(requireActivity().getColor(R.color.design_default_color_secondary))
-            model.evaluationData.route.notifyObserver()
+            model.data.route.notifyObserver()
         }
 
     }
 
     private fun onResetButtonClick() {
         routeStarted = false
-        model.evaluationData.route.value.forEach { it.timestamp = 0L }
-        model.evaluationData.route.notifyObserver()
+        model.data.route.value.forEach { it.timestamp = 0L }
+        model.data.route.notifyObserver()
         btnRouteStartNext.text = getString(R.string.start)
         btnRouteStartNext.setBackgroundColor(requireActivity().getColor(R.color.design_default_color_primary))
     }

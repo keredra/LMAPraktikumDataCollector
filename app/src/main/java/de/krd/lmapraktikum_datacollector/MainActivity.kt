@@ -104,9 +104,7 @@ class MainActivity : PermissionActivity() {
             R.id.action_delete_data -> {
                 model.data.locations.clear()
                 model.data.sensorEvents.clear()
-            }
-            R.id.action_delete_route -> {
-                model.evaluationData.route.clear()
+                model.data.route.clear()
             }
             R.id.action_import_gpx -> {
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
@@ -152,7 +150,7 @@ class MainActivity : PermissionActivity() {
                     try {
                         val content: String? = readFileContent(currentUri)
                         Log.i("FileReader", "" + content)
-                        model.data.extractLatLng(""+content)
+                        model.data.loadGpx(""+content)
                     } catch (e: IOException) {
                         // Handle error here
                     }
