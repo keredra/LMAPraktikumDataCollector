@@ -103,16 +103,4 @@
     <string name="reset">Zurücksetzen</string>
     <string name="start">Start</string>
     <string name="next">weiter</string>
-    <string-array name="listPriority">
-        <item>ACCURACY HIGH</item>
-        <item>BALANCED POWER ACCURACY</item>
-        <item>PRIORITY_LOW_POWER</item>
-        <item>PRIORITY_NO_POWER</item>
-    </string-array>
-    <string-array name="listPriorityValues">
-        <item>LocationRequest.PRIORITY_HIGH_ACCURACY</item>
-        <item>LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY</item>
-        <item>LocationRequest.PRIORITY_LOW_POWER</item>
-        <item>LocationRequest.PRIORITY_NO_POWER</item>
-    </string-array>
 </resources>
