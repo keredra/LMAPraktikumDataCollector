@@ -103,4 +103,6 @@
     <string name="start">Start</string>
     <string name="next">weiter</string>
     <string name="setting_location_priority" > setting_location_priority</string>
+    <string name="setting_location_checkBox_AndroidApi">setting_location_enable_gps</string>
+    <string name="setting_location_checkBox_GoogleApi">setting_location_enable_gps</string>
 </resources>

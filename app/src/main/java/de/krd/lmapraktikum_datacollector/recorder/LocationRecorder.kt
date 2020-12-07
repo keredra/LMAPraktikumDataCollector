@@ -6,11 +6,13 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Looper
 import android.preference.PreferenceManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.*
 import de.krd.lmapraktikum_datacollector.GlobalModel
@@ -30,11 +32,13 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var model: GlobalModel
     private var locationManager: LocationManager
     private var preferences: SharedPreferences
-    private var fusedLocationProviderClient: FusedLocationProviderClient
+    private var locationProviderClient: FusedLocationProviderClient
     var locationRequest: LocationRequest? = null
+    private lateinit var locationCallback: LocationCallback
     var interval = 10000 //
     var fastestInterval = 5000 //This method sets the fastest rate in milliseconds at which your app can handle location updates
     private var priority = PRIORITY_HIGH_ACCURACY
+    private var cbAndroidApi = true
 
 
     constructor(activity: PermissionActivity, model: GlobalModel) {
@@ -44,11 +48,13 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
          * Get the location service
          */
         locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        fusedLocationProviderClient = FusedLocationProviderClient(this.activity) //wo soll ich das sonst initialisieren?
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(this.activity);  //wo soll ich das sonst initialisieren?
+        locationCallback = getLocationCallback();
         locationRequest = LocationRequest().setInterval(interval.toLong()).setFastestInterval(fastestInterval.toLong()).setPriority(priority)
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         loadPreferences()
         preferences.registerOnSharedPreferenceChangeListener(this)
+
 
     }
 
@@ -63,30 +69,12 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
              * GPS Debug Message
              */
             Log.d(
-                location.provider, "lat: ${location.latitude}" + " lng: ${location.longitude}"
+                location.provider,
+                    "From: Android Api: "+"lat: ${location.latitude}" + " lng: ${location.longitude}"
                         + " alt: ${location.altitude}" + " acc: ${location.accuracy}"
             )
 
             model.data.locations.add(locationData);
-        }
-    }
-
-    private val locationCallback = object: LocationCallback(){
-        override fun onLocationResult(location_result: LocationResult?) {
-            super.onLocationResult(location_result)
-            if(location_result != null && location_result.lastLocation != null ){
-                Log.d(
-                        location_result?.lastLocation?.provider, "lat: ${location_result?.lastLocation?.latitude}"
-                        + " lng: ${location_result?.lastLocation?.longitude}"
-                        + " alt: ${location_result?.lastLocation?.altitude}"
-                        + " acc: ${location_result?.lastLocation?.accuracy}"
-                )
-
-                val lastLocation = LocationData(location_result.lastLocation.time,location_result.lastLocation.provider,
-                        location_result.lastLocation.latitude,location_result.lastLocation.longitude,
-                        location_result.lastLocation.altitude,location_result.lastLocation.accuracy)
-                model.data.locations.add(lastLocation)
-            }
         }
     }
 
@@ -102,55 +90,88 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
 
     @SuppressLint("MissingPermission")
     private fun addLocationRequests() {
-        if (gpsEnabled) {
-            activity.withPermission(Manifest.permission.ACCESS_FINE_LOCATION) {
-                locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    minTimeMs,
-                    minDistanceM,
-                    locationListener
-                )
+        if(cbAndroidApi) {
+            if (gpsEnabled) {
+                activity.withPermission(Manifest.permission.ACCESS_FINE_LOCATION) {
+                    locationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER,
+                            minTimeMs,
+                            minDistanceM,
+                            locationListener
+                    )
+                }
+            }
+
+            if (networkEnabled) {
+                activity.withPermission(Manifest.permission.ACCESS_COARSE_LOCATION) {
+                    locationManager.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER,
+                            minTimeMs,
+                            minDistanceM,
+                            locationListener
+                    )
+                }
             }
         }
 
-        if (networkEnabled) {
-            activity.withPermission(Manifest.permission.ACCESS_COARSE_LOCATION) {
-                locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    minTimeMs,
-                    minDistanceM,
-                    locationListener
-                )
+        if(!cbAndroidApi) {
+            if (priority == 0) {
+                getLocationCallback()?.let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_HIGH_ACCURACY) };
+                Log.i("priority:", "HIGH_ACCURACY")
+                //TODO fastestIntervall muss man auch noch uebergeben koennen
+            }
+            if (priority == 1) {
+                getLocationCallback()?.let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY) };
+                Log.i("priority:", "BALANCED_POWER_ACCURACY")
+            }
+            if (priority == 2) {
+                getLocationCallback()?.let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_LOW_POWER) };
+                Log.i("priority:", "LOW_POWER")
+            }
+            if (priority == 3) {
+                getLocationCallback()?.let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_NO_POWER) };
+                Log.i("priority:", "NO_POWER")
             }
         }
+    }
 
-        if(priority.equals(PRIORITY_HIGH_ACCURACY)){
-            locationRequest?.setInterval(minTimeMs)?.setFastestInterval(fastestInterval.toLong())?.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
-            Log.i("priority:", "HIGH_ACCURACY")
-            //TODO fastestIntervall muss man auch noch uebergeben koennen
+    private fun getLocationCallback(): LocationCallback {
+        return object : LocationCallback() {
+            override fun onLocationResult(location_result: LocationResult?) {
+                super.onLocationResult(location_result)
+
+                if(location_result != null && location_result.lastLocation != null ){
+                    Log.d(
+                            location_result?.lastLocation?.provider,
+                            "From: Google Api "+
+                                    "lat: ${location_result?.lastLocation?.latitude}"
+                            + " lng: ${location_result?.lastLocation?.longitude}"
+                            + " alt: ${location_result?.lastLocation?.altitude}"
+                            + " acc: ${location_result?.lastLocation?.accuracy}"
+
+                    )
+
+                    val lastLocation = LocationData(location_result.lastLocation.time,location_result.lastLocation.provider,
+                            location_result.lastLocation.latitude,location_result.lastLocation.longitude,
+                            location_result.lastLocation.altitude,location_result.lastLocation.accuracy)
+                    model.data.locations.add(lastLocation)
+                }
+            }
         }
-        if(priority.equals(PRIORITY_BALANCED_POWER_ACCURACY)){
-            locationRequest?.setInterval(minTimeMs)?.setFastestInterval(fastestInterval.toLong())?.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
-            Log.i("priority:", "BALANCED_POWER_ACCURACY")
-        }
-        if(priority.equals(PRIORITY_LOW_POWER)){
-            locationRequest?.setInterval(minTimeMs)?.setFastestInterval(fastestInterval.toLong())?.priority = LocationRequest.PRIORITY_LOW_POWER
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
-            Log.i("priority:", "LOW_POWER")
-        }
-        if(priority.equals(PRIORITY_NO_POWER)){
-            locationRequest?.setInterval(minTimeMs)?.setFastestInterval(fastestInterval.toLong())?.priority = LocationRequest.PRIORITY_NO_POWER
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
-            Log.i("priority:", "NO_POWER")
-        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun updateLocationRequest(pLocationCallback: LocationCallback , pInterval: Int, pFastestInterval: Int, priority: Int) {
+        locationProviderClient.removeLocationUpdates(locationCallback)
+        locationCallback = pLocationCallback
+        locationRequest = LocationRequest().setInterval(pInterval.toLong()).setFastestInterval(pFastestInterval.toLong()).setPriority(priority)
+        locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
     }
 
 
     private fun removeLocationRequests() {
         locationManager.removeUpdates(locationListener)
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        locationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     private fun isLastProviderLocation(location: LocationData): Boolean {
@@ -204,6 +225,11 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                 preferences,
                 R.string.setting_location_priority
         )
+        cbAndroidApi = PreferenceHelper.getBoolean(
+                activity,
+                preferences,
+                R.string.setting_location_checkBox_AndroidApi
+        )
     }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
@@ -211,6 +237,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             "setting_location_enable_network",
             "setting_location_update_time",
             "setting_location_priority",
+            "setting_location_checkBox_AndroidApi",
             activity.getString(R.string.setting_location_min_distance) -> {
                 loadPreferences()
                 if (run) {

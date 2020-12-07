@@ -47,16 +47,27 @@
         app:icon="@drawable/ic_location">
 
         <SwitchPreferenceCompat
-            app:key="@string/setting_location_enable_gps"
-            app:summaryOff="@string/setting_location_enable_gps_summary_off"
-            app:summaryOn="@string/setting_location_enable_gps_summary_on"
-            app:title="@string/setting_location_enable_gps_title" />
-
-        <SwitchPreferenceCompat
-            app:key="@string/setting_location_enable_network"
-            app:summaryOff="@string/setting_location_enable_network_summary_off"
-            app:summaryOn="@string/setting_location_enable_network_summary_on"
-            app:title="@string/setting_location_enable_network_title" />
+            android:key="@string/setting_location_checkBox_AndroidApi"
+            android:title="Android API"
+            app:summaryOn="Loaklisierung ueber Andorid API"
+            app:summaryOff="Lokalisierung ueber Google Api"
+            android:defaultValue="true"/>
+            <SwitchPreferenceCompat
+                app:key="@string/setting_location_enable_gps"
+                app:summaryOff="@string/setting_location_enable_gps_summary_off"
+                app:summaryOn="@string/setting_location_enable_gps_summary_on"
+                app:title="@string/setting_location_enable_gps_title" />
+            <SwitchPreferenceCompat
+                app:key="@string/setting_location_enable_network"
+                app:summaryOff="@string/setting_location_enable_network_summary_off"
+                app:summaryOn="@string/setting_location_enable_network_summary_on"
+                app:title="@string/setting_location_enable_network_title" />
+        <ListPreference
+            android:key="@string/setting_location_priority"
+            android:title="Priority"
+            android:entries="@array/listPriority"
+            android:entryValues="@array/listPriorityValues"
+            android:defaultValue="0"/>
         <EditTextPreference
             android:defaultValue="5000"
             android:inputType="number"
@@ -72,12 +83,6 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/setting_location_min_distance_title" />
-        <ListPreference
-            android:key="@string/setting_location_priority"
-            android:title="Priority"
-            android:entries="@array/listPriority"
-            android:entryValues="@array/listPriorityValues" />
-        <!-- default value muss hier noch rein-->
 
     </PreferenceCategory>
 
