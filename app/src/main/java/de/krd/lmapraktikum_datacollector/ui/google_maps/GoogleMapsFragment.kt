@@ -91,8 +91,6 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
         super.onResume()
         mapView.onResume()
         preferences.registerOnSharedPreferenceChangeListener(this)
-        model.data.locations.observe(viewLifecycleOwner, locationsObserver)
-        model.data.route.observe(viewLifecycleOwner, routeObserver)
     }
 
     override fun onPause() {
@@ -118,6 +116,9 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
             if (!routeStarted)
                 model.data.route.add(PositionEvaluationData(position, 0L, 0L))
         })
+
+        model.data.locations.observe(viewLifecycleOwner, locationsObserver)
+        model.data.route.observe(viewLifecycleOwner, routeObserver)
 
         map.setOnCameraMoveStartedListener(this)
     }
