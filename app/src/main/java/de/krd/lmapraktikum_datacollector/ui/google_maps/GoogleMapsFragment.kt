@@ -116,7 +116,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
 
         this.map.setOnMapClickListener(OnMapClickListener { position -> // TODO Auto-generated method stub
             if (!routeStarted)
-                model.data.route.add(PositionEvaluationData(position, 0))
+                model.data.route.add(PositionEvaluationData(position, 0L, 0L))
         })
 
         map.setOnCameraMoveStartedListener(this)
@@ -132,8 +132,11 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
             if (actual) {
                 drawableId = R.drawable.ic_location_on_yellow
 
-                if (positionEvaluationData.timestamp == 0L) {
+                if (positionEvaluationData.tsArrival == 0L) {
                     actual = false
+                } else if (positionEvaluationData.tsDepature == 0L) {
+                    actual = false
+                    drawableId = R.drawable.ic_location_on_green
                 } else {
                     drawableId = R.drawable.ic_location_on_green
                 }
@@ -246,8 +249,13 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     private fun onStartNextButtonClick() {
         if (routeStarted) {
             try {
-                val position = model.data.route.value.first { it.timestamp == 0L }
-                position.timestamp = System.currentTimeMillis()
+                val position = model.data.route.value.first { it.tsArrival == 0L || it.tsDepature == 0L }
+                if (position.tsArrival == 0L) {
+                    position.tsArrival = System.currentTimeMillis()
+                } else {
+                    position.tsDepature = System.currentTimeMillis()
+                }
+
                 model.data.route.notifyObserver()
             } catch (e: Exception) {}
         } else {
@@ -261,7 +269,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
 
     private fun onResetButtonClick() {
         routeStarted = false
-        model.data.route.value.forEach { it.timestamp = 0L }
+        model.data.route.value.forEach { it.tsArrival = 0L; it.tsDepature = 0L; }
         model.data.route.notifyObserver()
         btnRouteStartNext.text = getString(R.string.start)
         btnRouteStartNext.setBackgroundColor(requireActivity().getColor(R.color.design_default_color_primary))

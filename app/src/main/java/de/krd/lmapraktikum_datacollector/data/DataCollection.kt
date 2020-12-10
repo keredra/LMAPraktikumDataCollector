@@ -92,8 +92,8 @@ class DataCollection {
                     if (tagName == "rtept" || tagName == "wpt") {
                         val latitude = parser.getAttributeValue(0).toDouble()
                         val longitude = parser.getAttributeValue(1).toDouble()
-                        val timestamp = System.currentTimeMillis()
-                        val wayPoint = PositionEvaluationData(LatLng(latitude, longitude),timestamp)
+
+                        val wayPoint = PositionEvaluationData(LatLng(latitude, longitude), 0L, 0L)
                         route.add(wayPoint)
                         Log.i("Waypoint", ""+wayPoint)
                     }
