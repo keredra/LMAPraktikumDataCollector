@@ -127,7 +127,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
         var i = 0
         listOfMarker.forEach { it.remove() }
         listOfMarker.clear()
-        var actual = routeStarted
+        var actual = true
         route.forEach { positionEvaluationData ->
             var drawableId = R.drawable.ic_location_on_red
             if (actual) {
@@ -248,32 +248,49 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     }
 
     private fun onStartNextButtonClick() {
-        if (routeStarted) {
-            try {
-                val position = model.data.route.value.first { it.tsArrival == 0L || it.tsDepature == 0L }
-                if (position.tsArrival == 0L) {
-                    position.tsArrival = System.currentTimeMillis()
-                } else {
-                    position.tsDepature = System.currentTimeMillis()
-                }
+        val rActivity = requireActivity()
 
-                model.data.route.notifyObserver()
-            } catch (e: Exception) {}
-        } else {
+        if (!routeStarted) {
+            resetRoute()
             routeStarted = true
-            btnRouteStartNext.text = getString(R.string.next)
-            btnRouteStartNext.setBackgroundColor(requireActivity().getColor(R.color.design_default_color_secondary))
+        }
+
+        try {
+            val position = model.data.route.value.first { it.tsArrival == 0L || it.tsDepature == 0L }
+            if (position.tsArrival == 0L) {
+                position.tsArrival = System.currentTimeMillis()
+                setStartNextBtnStyle(R.string.next, R.color.design_default_color_secondary)
+            } else {
+                position.tsDepature = System.currentTimeMillis()
+                setStartNextBtnStyle(R.string.stop, R.color.red)
+            }
+
+            if (model.data.route.value.last().tsArrival != 0L) {
+                routeStarted = false
+                setStartNextBtnStyle(R.string.start, R.color.design_default_color_primary)
+            }
+
             model.data.route.notifyObserver()
+        } catch (e: NoSuchElementException) {
+            routeStarted = false
+            setStartNextBtnStyle(R.string.start, R.color.design_default_color_primary)
         }
 
     }
 
-    private fun onResetButtonClick() {
-        routeStarted = false
+    private fun setStartNextBtnStyle(textId: Int, colorId: Int) {
+        btnRouteStartNext.text = getString(textId)
+        btnRouteStartNext.setBackgroundColor(requireActivity().getColor(colorId))
+    }
+
+    private fun resetRoute() {
         model.data.route.value.forEach { it.tsArrival = 0L; it.tsDepature = 0L; }
         model.data.route.notifyObserver()
-        btnRouteStartNext.text = getString(R.string.start)
-        btnRouteStartNext.setBackgroundColor(requireActivity().getColor(R.color.design_default_color_primary))
+        setStartNextBtnStyle(R.string.start, R.color.design_default_color_primary)
+    }
+    private fun onResetButtonClick() {
+        routeStarted = false
+        resetRoute()
     }
 
     private fun loadPreferences() {
