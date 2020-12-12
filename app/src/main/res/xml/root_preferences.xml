@@ -45,12 +45,11 @@
     <PreferenceCategory
         app:title="@string/setting_location_header"
         app:icon="@drawable/ic_location">
-
         <SwitchPreferenceCompat
-            android:key="@string/setting_location_checkBox_AndroidApi"
+            android:key="@string/setting_location_enbale_AndroidApi"
             android:title="Android API"
-            app:summaryOn="Loaklisierung ueber Andorid API"
-            app:summaryOff="Lokalisierung ueber Google Api"
+            app:summaryOn="Loaklisierung über Android API"
+            app:summaryOff="Lokalisierung über Google API"
             android:defaultValue="true"/>
             <SwitchPreferenceCompat
                 app:key="@string/setting_location_enable_gps"

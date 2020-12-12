@@ -34,21 +34,21 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private var preferences: SharedPreferences
     private var locationProviderClient: FusedLocationProviderClient
     var locationRequest: LocationRequest? = null
-    private lateinit var locationCallback: LocationCallback
+    private var locationCallback: LocationCallback
     var interval = 10000 //
-    var fastestInterval = 5000 //This method sets the fastest rate in milliseconds at which your app can handle location updates
+    var fastestInterval = 5000 //if a location is available sooner you can get it (i.e. another app is using the location services).
     private var priority = PRIORITY_HIGH_ACCURACY
     private var cbAndroidApi = true
 
 
     constructor(activity: PermissionActivity, model: GlobalModel) {
-        this.activity = activity;
-        this.model = model;
+        this.activity = activity
+        this.model = model
         /*
          * Get the location service
          */
         locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        locationProviderClient = LocationServices.getFusedLocationProviderClient(this.activity);  //wo soll ich das sonst initialisieren?
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(this.activity)
         locationCallback = getLocationCallback();
         locationRequest = LocationRequest().setInterval(interval.toLong()).setFastestInterval(fastestInterval.toLong()).setPriority(priority)
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
@@ -116,20 +116,20 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
 
         if(!cbAndroidApi) {
             if (priority == 0) {
-                getLocationCallback()?.let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_HIGH_ACCURACY) };
+                getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_HIGH_ACCURACY) };
                 Log.i("priority:", "HIGH_ACCURACY")
-                //TODO fastestIntervall muss man auch noch uebergeben koennen
             }
             if (priority == 1) {
-                getLocationCallback()?.let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY) };
+                getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY) };
                 Log.i("priority:", "BALANCED_POWER_ACCURACY")
+                //fastestIntervall= 1min
             }
             if (priority == 2) {
-                getLocationCallback()?.let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_LOW_POWER) };
+                getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_LOW_POWER) };
                 Log.i("priority:", "LOW_POWER")
             }
             if (priority == 3) {
-                getLocationCallback()?.let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_NO_POWER) };
+                getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_NO_POWER) };
                 Log.i("priority:", "NO_POWER")
             }
         }
@@ -142,12 +142,12 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
 
                 if(location_result != null && location_result.lastLocation != null ){
                     Log.d(
-                            location_result?.lastLocation?.provider,
+                            location_result.lastLocation?.provider,
                             "From: Google Api "+
-                                    "lat: ${location_result?.lastLocation?.latitude}"
-                            + " lng: ${location_result?.lastLocation?.longitude}"
-                            + " alt: ${location_result?.lastLocation?.altitude}"
-                            + " acc: ${location_result?.lastLocation?.accuracy}"
+                                    "lat: ${location_result.lastLocation?.latitude}"
+                            + " lng: ${location_result.lastLocation?.longitude}"
+                            + " alt: ${location_result.lastLocation?.altitude}"
+                            + " acc: ${location_result.lastLocation?.accuracy}"
 
                     )
 
@@ -228,7 +228,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         cbAndroidApi = PreferenceHelper.getBoolean(
                 activity,
                 preferences,
-                R.string.setting_location_checkBox_AndroidApi
+                R.string.setting_location_enbale_AndroidApi
         )
     }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -237,7 +237,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             "setting_location_enable_network",
             "setting_location_update_time",
             "setting_location_priority",
-            "setting_location_checkBox_AndroidApi",
+            "setting_location_enbale_AndroidApi",
             activity.getString(R.string.setting_location_min_distance) -> {
                 loadPreferences()
                 if (run) {
