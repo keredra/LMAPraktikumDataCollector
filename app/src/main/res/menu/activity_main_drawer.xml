@@ -20,5 +20,9 @@
             android:id="@+id/nav_sensor_data"
             android:icon="@android:drawable/ic_menu_recent_history"
             android:title="Sensordaten" />
+        <item
+            android:id="@+id/nav_cdf"
+            android:icon="@drawable/ic_menu_chart"
+            android:title="CDF" />
     </group>
 </menu>

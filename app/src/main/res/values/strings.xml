@@ -102,7 +102,7 @@
     <string name="reset">Zurücksetzen</string>
     <string name="start">Start</string>
     <string name="next">weiter</string>
-    <string name="setting_location_priority" > setting_location_priority</string>
+    <string name="setting_location_priority"> setting_location_priority</string>
     <string name="stop">stop</string>
-    <string name="setting_location_enbale_AndroidApi" >setting_location_enable_AndroidApi</string>
+    <string name="setting_location_enbale_AndroidApi">setting_location_enable_AndroidApi</string>
 </resources>
