@@ -37,10 +37,16 @@ class CdfFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        graph.getViewport().setXAxisBoundsManual(true)
-        graph.getViewport().setYAxisBoundsManual(true)
-        graph.getViewport().setMinY(0.0)
-        graph.getViewport().setMaxY(1.0)
+        val viewPort = graph.viewport
+        viewPort.setXAxisBoundsManual(true)
+        viewPort.setYAxisBoundsManual(true)
+        viewPort.setMinY(0.0)
+        viewPort.setMaxY(1.0)
+
+        graph.legendRenderer.isVisible = true
+        graph.gridLabelRenderer.horizontalAxisTitle = "Error Distance [Meter]"
+        graph.gridLabelRenderer.verticalAxisTitle = "Probability"
+
         if (model.data.route.value.size >= 2) {
             val errorValues = mutableListOf<Double>()
 
@@ -67,9 +73,10 @@ class CdfFragment : Fragment() {
                     elementNum.toDouble() / sortedErrorValues.size))
             }
 
-            graph.getViewport().setMinX(0.0)
-            graph.getViewport().setMaxX(sortedErrorValues.last())
+            viewPort.setMinX(0.0)
+            viewPort.setMaxX(sortedErrorValues.last())
             val series: LineGraphSeries<DataPoint> = LineGraphSeries(dataPoints.toTypedArray())
+            series.title = "CDF - " + model.data.locations.value.first().provider.toUpperCase()
             graph.addSeries(series)
 
         }
