@@ -148,10 +148,11 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                             + " lng: ${location_result.lastLocation?.longitude}"
                             + " alt: ${location_result.lastLocation?.altitude}"
                             + " acc: ${location_result.lastLocation?.accuracy}"
+                                    + " prov: ${location_result.lastLocation?.provider}"
 
                     )
 
-                    val lastLocation = LocationData(location_result.lastLocation.time,location_result.lastLocation.provider,
+                    val lastLocation = LocationData(location_result.lastLocation.time,priority.toString(),
                             location_result.lastLocation.latitude,location_result.lastLocation.longitude,
                             location_result.lastLocation.altitude,location_result.lastLocation.accuracy)
                     model.data.locations.add(lastLocation)
@@ -237,7 +238,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             "setting_location_enable_network",
             "setting_location_update_time",
             "setting_location_priority",
-            "setting_location_enbale_AndroidApi",
+            "setting_location_enable_AndroidApi",
             activity.getString(R.string.setting_location_min_distance) -> {
                 loadPreferences()
                 if (run) {

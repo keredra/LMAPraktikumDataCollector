@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.data.LocationData
 import java.util.*
@@ -65,7 +66,17 @@ class LocationListviewAdapter(
         val item: LocationData = dataSource.get(position)
         val date = Date(item.timestamp)
         holder.mTime?.setText(date.toString())
-        holder.mProvider?.setText(item.provider)
+        if(item.provider=="0"){
+            holder.mProvider?.setText("High:Accuracy")
+        }else if(item.provider=="1"){
+            holder.mProvider?.setText("Balanced")
+        }else if(item.provider=="2"){
+            holder.mProvider?.setText("Low:Power")
+        }else if(item.provider=="3"){
+            holder.mProvider?.setText("No:Power")
+        }else{
+            holder.mProvider?.setText(item.provider)
+        }
         holder.mLatitude?.setText(item.latitude.toString())
         holder.mLongitude?.setText(item.longitude.toString())
         holder.mAltitude?.setText(item.altitude.toString())
