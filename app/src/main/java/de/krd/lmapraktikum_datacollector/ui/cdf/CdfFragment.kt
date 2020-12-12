@@ -74,7 +74,7 @@ class CdfFragment : Fragment() {
             }
 
             viewPort.setMinX(0.0)
-            viewPort.setMaxX(sortedErrorValues.last())
+            viewPort.setMaxX(sortedErrorValues.last() + sortedErrorValues.last() * 0.1f)
             val series: LineGraphSeries<DataPoint> = LineGraphSeries(dataPoints.toTypedArray())
             series.title = "CDF - " + model.data.locations.value.first().provider.toUpperCase()
             graph.addSeries(series)
