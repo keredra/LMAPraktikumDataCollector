@@ -50,9 +50,9 @@ class CdfFragment : Fragment() {
                 val routeEndPoint = routeIterator.next()
 
                 val routeLocationData = getLocationDataInRange(routeStartPoint.tsDepature, routeEndPoint.tsArrival)
-                for (i in routeLocationData.indices) {
-                    val elementNum = i + 1
-                    errorValues.add(getMaxError(routeLocationData.subList(0, elementNum)))
+
+                routeLocationData.forEach {
+                    errorValues.add(getDistanceError(it, routeStartPoint, routeEndPoint))
                 }
                 routeStartPoint = routeEndPoint
             }
@@ -81,29 +81,20 @@ class CdfFragment : Fragment() {
         }
     }
 
-    private fun getMaxError(locations : List<LocationData>) : Double {
-        var maxDistanceError = 0.0
+    private fun getDistanceError(locationData : LocationData,
+                            routeSectionStart: PositionEvaluationData,
+                            routeSectionEnd: PositionEvaluationData) : Double {
+        val realLatLng = getPositionByTimestamp(routeSectionStart, routeSectionEnd, locationData.timestamp)
+        val realLocation = Location("")
+        realLocation.latitude = realLatLng.latitude
+        realLocation.longitude = realLatLng.longitude
 
-        locations.forEach {l ->
-            val routeSectionStart = model.data.route.value.find { pe -> pe.tsDepature <= l.timestamp }!!
-            val routeSectionEnd = model.data.route.value.find { pe -> pe.tsArrival > l.timestamp }!!
+        val recordedLocation = Location("")
+        recordedLocation.latitude = locationData.latitude
+        recordedLocation.longitude = locationData.longitude
 
-            val realLatLng = getPositionByTimestamp(routeSectionStart, routeSectionEnd, l.timestamp)
-            val realLocation = Location("")
-            realLocation.latitude = realLatLng.latitude
-            realLocation.longitude = realLatLng.longitude
 
-            val recordedLocation = Location("")
-            recordedLocation.latitude = l.latitude
-            recordedLocation.longitude = l.longitude
-
-            val distanceError = realLocation.distanceTo(recordedLocation).toDouble()
-            if (distanceError > maxDistanceError) {
-                maxDistanceError = distanceError
-            }
-        }
-
-        return maxDistanceError
+        return realLocation.distanceTo(recordedLocation).toDouble()
     }
 
     private fun getPositionByTimestamp(
