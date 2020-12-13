@@ -72,12 +72,16 @@ class CdfFragment : Fragment() {
                 dataPoints.add(DataPoint(sortedErrorValues.get(i),
                     elementNum.toDouble() / sortedErrorValues.size))
             }
+            val konfidenz50 = sortedErrorValues[(sortedErrorValues.size/2).toInt()]
+            val konfidenz95 = sortedErrorValues[(sortedErrorValues.size*0.95).toInt()]
 
             viewPort.setMinX(0.0)
             viewPort.setMaxX(sortedErrorValues.last() + sortedErrorValues.last() * 0.1f)
             val series: LineGraphSeries<DataPoint> = LineGraphSeries(dataPoints.toTypedArray())
             series.title = "CDF - " + model.data.locations.value.first().provider.toUpperCase()
             graph.addSeries(series)
+            tV_konfidenz50.text = "Konfidenzlevel 50 = "+konfidenz50.toString()
+            tV_konfidenz95.text = "Konfidenzlevel 95 = "+konfidenz95.toString()
 
         }
     }

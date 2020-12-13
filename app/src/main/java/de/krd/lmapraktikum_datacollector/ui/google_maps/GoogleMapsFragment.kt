@@ -196,6 +196,10 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
                         circleOptions.fillColor(Color.GREEN)
                         accuracyCircleOptions.strokeColor(Color.GREEN)
                     }
+                    else -> {
+                        circleOptions.fillColor(Color.BLUE)
+                        accuracyCircleOptions.strokeColor(Color.BLUE)
+                    }
                 }
                 circleOptions.center(LatLng(it.latitude, it.longitude))
                 listOfCircles.add(map.addCircle(circleOptions))

@@ -115,23 +115,36 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         }
 
         if(!cbAndroidApi) {
-            if (priority == 0) {
-                getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_HIGH_ACCURACY) };
-                Log.i("priority:", "HIGH_ACCURACY")
+            if (gpsEnabled) {
+                activity.withPermission(Manifest.permission.ACCESS_FINE_LOCATION) {
+                    recordWithPriority()
+                }
             }
-            if (priority == 1) {
-                getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY) };
-                Log.i("priority:", "BALANCED_POWER_ACCURACY")
-                //fastestIntervall= 1min
+            if (networkEnabled) {
+                activity.withPermission(Manifest.permission.ACCESS_COARSE_LOCATION) {
+                    recordWithPriority()
+                }
             }
-            if (priority == 2) {
-                getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_LOW_POWER) };
-                Log.i("priority:", "LOW_POWER")
-            }
-            if (priority == 3) {
-                getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_NO_POWER) };
-                Log.i("priority:", "NO_POWER")
-            }
+        }
+    }
+
+    private fun recordWithPriority() {
+        if (priority == 0) {
+            getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_HIGH_ACCURACY) };
+            Log.i("priority:", "HIGH_ACCURACY")
+        }
+        if (priority == 1) {
+            getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY) };
+            Log.i("priority:", "BALANCED_POWER_ACCURACY")
+            //fastestIntervall= 1min
+        }
+        if (priority == 2) {
+            getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_LOW_POWER) };
+            Log.i("priority:", "LOW_POWER")
+        }
+        if (priority == 3) {
+            getLocationCallback().let { updateLocationRequest(it, interval, fastestInterval, LocationRequest.PRIORITY_NO_POWER) };
+            Log.i("priority:", "NO_POWER")
         }
     }
 
