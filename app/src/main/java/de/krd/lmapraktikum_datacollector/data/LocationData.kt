@@ -23,5 +23,12 @@ data class LocationData(
             )
         }
     }
-
+    fun toHRString() : String {
+        var result = ""
+        result += ""+ String.format("%.3f", latitude) + ", "
+        result += ""+ String.format("%.3f", longitude) + ", "
+        result += ""+ String.format("%.3f", altitude) + ", "
+        result += ""+ String.format("%.0f", accuracy) + ""
+        return result
+    }
 }

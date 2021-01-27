@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TableTextViewStyle">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:autoSizeTextType">uniform</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:autoSizeMaxTextSize">12dp</item>
+        <item name="android:autoSizeMinTextSize">10dp</item>
+    </style>
+
+    <style name="TableTextViewRightStyle" parent="TableTextViewStyle">
+        <item name="android:gravity">center|end</item>
+        <item name="android:layout_weight">2</item>
+    </style>
+
+    <style name="TableTextViewLeftStyle" parent="TableTextViewStyle">
+        <item name="android:gravity">center|start</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+
+    <style name="TableTextViewCenterStyle" parent="TableTextViewStyle">
+        <item name="android:gravity">center</item>
+    </style>
+</resources>

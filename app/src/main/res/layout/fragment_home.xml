@@ -1,107 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tv_currentAcc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="16dp"
-    android:paddingTop="16dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="16dp"
-    tools:context=".ui.home.HomeFragment">
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:stretchColumns="*">
 
-    <TextView
-        android:id="@+id/tv_currAcc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="72dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/setting_sensor_sampling_period_title"/>
+        <SeekBar
+            style="@style/TableTextViewRightStyle"
+            android:id="@+id/sbSamplingPeriod"
+            android:max="500000"
+            android:min="10000" />
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/accelerometer"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="Abtastrate"/>
+        <TextView
+            android:id="@+id/tvAcceleratorSamplingRate"
+            style="@style/TableTextViewRightStyle" />
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/current_ts_xyz"/>
+        <TextView
+            android:id="@+id/tvAcceleratorCurrentValue"
+            style="@style/TableTextViewRightStyle" />
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/last_ts_xyz"/>
+        <TextView
+            android:id="@+id/tvAcceleratorLastValue"
+            style="@style/TableTextViewRightStyle" />
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/gyroscope"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="Abtastrate"/>
+        <TextView
+            android:id="@+id/tvGyroscopeSamplingRate"
+            style="@style/TableTextViewRightStyle" />
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/current_ts_xyz"/>
+        <TextView
+            android:id="@+id/tvGyroscopeCurrentValue"
+            style="@style/TableTextViewRightStyle" />
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/last_ts_xyz"/>
+        <TextView
+            android:id="@+id/tvGyroscopeLastValue"
+            style="@style/TableTextViewRightStyle" />
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/gps"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="Abtastrate"/>
+        <TextView
+            android:id="@+id/tvGpsSamplingRate"
+            style="@style/TableTextViewRightStyle" />
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/current_ts_latlng"/>
+        <TextView
+            android:id="@+id/tvGpsCurrentValue"
+            style="@style/TableTextViewRightStyle" />
+    </TableRow>
+    <TableRow android:layout_weight="1">
+        <TextView
+            style="@style/TableTextViewLeftStyle"
+            android:text="@string/current_ts_latlng"/>
+        <TextView
+            android:id="@+id/tvGpsLastValue"
+            style="@style/TableTextViewRightStyle" />
+    </TableRow>
 
-    <TextView
-        android:id="@+id/tv_currSampRateAcc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="192dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_currGyro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="252dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_lastGyro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="312dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_currSampRateGyro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="372dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_currLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="432dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_lastLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="508dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_currSampRateLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="584dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_lastAcc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="132dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:max="500000"
-        android:min="10000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</TableLayout>

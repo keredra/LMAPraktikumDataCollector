@@ -22,4 +22,12 @@ data class SensorData(
             )
         }
     }
+
+    fun toHRString() : String {
+        var result = ""
+        result += values.joinToString {
+            String.format("%.3f", it)
+        }
+        return result
+    }
 }
