@@ -50,7 +50,10 @@
     <string name="setting_location_enable_network">setting_location_enable_network</string>
     <string name="setting_location_update_time">setting_location_update_time</string>
     <string name="setting_location_min_distance">setting_location_min_distance</string>
+    <string name="setting_location_movement_detection">setting_location_movement_detection</string>
     <string name="setting_location_priority">setting_location_priority</string>
+    <string name="setting_location_strategy">setting_location_strategy</string>
+    <string name="setting_location_max_speed">setting_location_max_speed</string>
 
     <string name="setting_location_enable_gps_title">GPS</string>
     <string name="setting_location_enable_gps_summary_on">GPS-Ortung aktiv</string>
@@ -60,6 +63,12 @@
     <string name="setting_location_enable_network_summary_on">Netzwerk-Ortung aktiv</string>
     <string name="setting_location_enable_network_summary_off">keine Netzwerk-Ortung</string>
 
+    <string name="setting_location_movement_detection_summary_off">Lokalisierung ohne sensorbasierte Bewegungserkennung</string>
+    <string name="setting_location_movement_detection_summary_on">Lokalisierung nur nach sensorbasierter Bewegungserkennung</string>
+    <string name="setting_location_movement_detection_title">Bewegungserkennung</string>
+
+    <string name="setting_location_strategy_title">Strategie</string>
+
     <string name="setting_location_update_time_title">Aktualisierungsrate</string>
     <string name="setting_location_update_time_summary">Legt fest wieviel Zeit zwischen zwei Ortungen vergehen müssen</string>
 
@@ -67,6 +76,7 @@
     <string name="setting_location_min_distance_summary">Legt die minimale Entfernung zwischen zwei Ortungen fest</string>
 
     <string name="setting_location_priority_title">Priorität</string>
+    <string name="setting_location_max_speed_title">Höchstgeschwindigkeit (km/h)</string>
 
     <string name="setting_google_maps_header">Google Maps</string>
 
@@ -89,14 +99,14 @@
     <string name="setting_sensor_enable_gyroscope">setting_sensor_enable_gyroscope</string>
     <string name="setting_sensor_enable_gyroscope_title">Gyroscope</string>
     <string name="setting_sensor_enable_gyroscope_summary_off">keine Aufzeichnung von Drehbewegungen</string>
-    <string name="setting_sensor_enable_gyroscope_summary_on">Drehbewegungen werden aufgezeichnet</string>
+    <string name="setting_sensor_enable_gyroscope_summary_on">Rotationsdaten werden aufgezeichnet</string>
     <string name="setting_sensor_enable_accelerometer">setting_sensor_enable_accelerometer</string>
     <string name="setting_sensor_enable_accelerometer_title">Accelerometer</string>
     <string name="setting_sensor_enable_accelerometer_summary_on">Beschleunigungsdaten werden aufgezeichnet</string>
     <string name="setting_sensor_enable_accelerometer_summary_off">keine Aufzeichnung von Beschleunigungsdaten</string>
 
     <string name="setting_sensor_sampling_period">setting_sensor_sampling_rate</string>
-    <string name="setting_sensor_sampling_period_title">Aktualisierungsperiode</string>
+    <string name="setting_sensor_sampling_period_title">Intervall</string>
     <string name="setting_google_maps_show_accuracy">setting_google_maps_show_accuracy</string>
     <string name="setting_google_maps_show_accuracy_title">Genauigkeit anzeigen</string>
     <string name="setting_google_maps_show_accuracy_summary_on">Die Genauigkeit wird auf der Karte dargestellt</string>
@@ -116,4 +126,12 @@
     <string name="start">Start</string>
     <string name="next">weiter</string>
     <string name="stop">stop</string>
+
+    <string name="accelerometer">Accelerometer</string>
+    <string name="gyroscope">Gyroscope</string>
+    <string name="gps">GPS</string>
+    <string name="last_ts_xyz">Letzte (X,Y,Z)</string>
+    <string name="current_ts_xyz">Aktuell (X,Y,Z)</string>
+    <string name="last_ts_latlng">Letzte (Lat,Lng,Alt,Acc)</string>
+    <string name="current_ts_latlng">Aktuell (Lat,Lng,Alt,Acc)</string>
 </resources>

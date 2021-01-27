@@ -69,6 +69,18 @@
             app:summaryOn="@string/setting_location_enable_network_summary_on"
             app:title="@string/setting_location_enable_network_title"
             app:dependency="@string/setting_location_android_api" />
+
+        <SwitchPreferenceCompat
+            app:key="@string/setting_location_movement_detection"
+            app:summaryOff="@string/setting_location_movement_detection_summary_off"
+            app:summaryOn="@string/setting_location_movement_detection_summary_on"
+            app:title="@string/setting_location_movement_detection_title" />
+        <ListPreference
+            android:key="@string/setting_location_strategy"
+            android:title="@string/setting_location_strategy_title"
+            android:entries="@array/list_strategies"
+            android:entryValues="@array/list_strategies_values"
+            android:defaultValue="1"/>
         <ListPreference
             android:key="@string/setting_location_priority"
             android:title="@string/setting_location_priority_title"
@@ -91,6 +103,14 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/setting_location_min_distance_title" />
+        <EditTextPreference
+            android:defaultValue="0.0"
+            android:inputType="numberDecimal"
+            android:digits="1234567890."
+            android:key="@string/setting_location_max_speed"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/setting_location_max_speed_title" />
 
     </PreferenceCategory>
 

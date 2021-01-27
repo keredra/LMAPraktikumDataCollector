@@ -22,4 +22,13 @@
         <item>104</item>
         <item>105</item>
     </string-array>
+    <string-array name="list_strategies">
+        <item>periodisch</item>
+        <item>Distanz (periodisch)</item>
+        <item>Distanz (statische Geschwindigkeit)</item>
+        <item>Distanz (dynamische Geschwindigkeit)</item>
+    </string-array>
+    <string-array name="list_strategies_values">
+        <item>1</item>
+    </string-array>
 </resources>
