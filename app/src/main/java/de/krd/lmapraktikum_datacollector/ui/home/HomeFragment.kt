@@ -79,7 +79,7 @@ class HomeFragment : Fragment(), Observer<MutableList<SensorData>>  {
                 val lastGyroskop = gyroscopeDataList.get(gyroscopeDataList.size - 2)
                 tvGyroscopeCurrentValue.text = currentGyroskop.toHRString()
                 tvGyroscopeLastValue.text = lastGyroskop.toHRString()
-                tvGpsSamplingRate.text = "" + (currentGyroskop.timestamp - lastGyroskop.timestamp)
+                tvGyroscopeSamplingRate.text = "" + (currentGyroskop.timestamp - lastGyroskop.timestamp)
             }
         }
         locationObserver = Observer { locationDataList ->

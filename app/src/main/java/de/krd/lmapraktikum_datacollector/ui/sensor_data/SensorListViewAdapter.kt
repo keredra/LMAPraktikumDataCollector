@@ -72,7 +72,7 @@ class SensorListViewAdapter(
         val item: SensorData = dataSource.get(position)
 
         val date = Date(item.timestamp)
-        holder.mTime?.setText(""+item.timestamp)
+        holder.mTime?.setText(date.toString())
         //holder.mName?.setText(item.name)
         //holder.mType?.setText(item.type.toString())
         holder.mName?.setText(item.name.subSequence(0, 4))
