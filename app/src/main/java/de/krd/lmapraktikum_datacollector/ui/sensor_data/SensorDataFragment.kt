@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import de.krd.lmapraktikum_datacollector.GlobalModel
@@ -17,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_sensor_data.*
 
 class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
     private val model: GlobalModel by activityViewModels()
-    private lateinit var adapter: SensorListviewAdapter
+    private lateinit var adapter: SensorListViewAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -27,7 +26,7 @@ class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = SensorListviewAdapter(requireActivity(), model.data.sensorEvents.value as ArrayList<SensorData>)
+        adapter = SensorListViewAdapter(requireActivity())
         lvCurrentSensor.adapter = adapter
     }
 
@@ -39,7 +38,8 @@ class SensorDataFragment : Fragment(), Observer<MutableList<SensorData>> {
         model.data.sensorEvents.removeObserver(this)
         super.onPause()
     }
-    override fun onChanged(t: MutableList<SensorData>?) {
-        adapter.notifyDataSetChanged()
+    override fun onChanged(t: MutableList<SensorData>) {
+        adapter.clearItems()
+        adapter.addItems(t)
     }
 }

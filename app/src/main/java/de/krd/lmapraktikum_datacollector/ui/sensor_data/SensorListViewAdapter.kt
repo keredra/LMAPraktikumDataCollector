@@ -7,16 +7,19 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import de.krd.lmapraktikum_datacollector.R
+import de.krd.lmapraktikum_datacollector.data.LocationData
 import de.krd.lmapraktikum_datacollector.data.SensorData
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SensorListviewAdapter(
-        private val context: Context,
-        private val dataSource: ArrayList<SensorData>
+class SensorListViewAdapter(
+        private val context: Context
 ) : BaseAdapter() {
+
+    private val dataSource: ArrayList<SensorData> = ArrayList<SensorData>()
     private val inflater: LayoutInflater
             = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
 
     override fun getCount(): Int {
         return dataSource.size
@@ -38,7 +41,14 @@ class SensorListviewAdapter(
         var mValueY: TextView? = null
         var mValueZ: TextView? = null
     }
-
+    fun clearItems() {
+        dataSource.clear()
+        notifyDataSetChanged()
+    }
+    fun addItems(items: List<SensorData>) {
+        dataSource.addAll(items)
+        notifyDataSetChanged()
+    }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var convertView = convertView
         val holder : ViewHolder
@@ -62,15 +72,10 @@ class SensorListviewAdapter(
         val item: SensorData = dataSource.get(position)
 
         val date = Date(item.timestamp)
-        holder.mTime?.setText(date.toString())
+        holder.mTime?.setText(""+item.timestamp)
         //holder.mName?.setText(item.name)
         //holder.mType?.setText(item.type.toString())
-        if(item.name.contains("Accelerometer")){
-            holder.mName?.setText("ACC")
-        }
-        if(item.name.contains("Gyroscope")){
-            holder.mName?.setText("GYRO")
-        }
+        holder.mName?.setText(item.name.subSequence(0, 4))
         holder.mValueX?.setText(item.values[0].toString())
         holder.mValueY?.setText(item.values[1].toString())
         holder.mValueZ?.setText(item.values[2].toString())

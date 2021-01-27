@@ -12,11 +12,11 @@ import de.krd.lmapraktikum_datacollector.data.LocationData
 import java.util.*
 
 
-class LocationListviewAdapter(
-        private val context: Context,
-        private val dataSource: ArrayList<LocationData>
+class LocationListViewAdapter(
+        private val context: Context
 ) : BaseAdapter() {
 
+    private val dataSource: ArrayList<LocationData> = ArrayList<LocationData>()
     private val inflater: LayoutInflater
             = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -30,6 +30,15 @@ class LocationListviewAdapter(
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
+    }
+
+    fun clearItems() {
+        dataSource.clear()
+        notifyDataSetChanged()
+    }
+    fun addItems(items: List<LocationData>) {
+        dataSource.addAll(items)
+        notifyDataSetChanged()
     }
 
     private class ViewHolder(convertView: View) {

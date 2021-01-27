@@ -14,6 +14,7 @@
         <SeekBar
             style="@style/TableTextViewRightStyle"
             android:id="@+id/sbSamplingPeriod"
+            android:layout_width="200dp"
             android:max="500000"
             android:min="10000" />
     </TableRow>
@@ -99,7 +100,7 @@
     <TableRow android:layout_weight="1">
         <TextView
             style="@style/TableTextViewLeftStyle"
-            android:text="@string/current_ts_latlng"/>
+            android:text="@string/last_ts_latlng"/>
         <TextView
             android:id="@+id/tvGpsLastValue"
             style="@style/TableTextViewRightStyle" />

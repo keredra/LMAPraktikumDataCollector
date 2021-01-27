@@ -10,12 +10,10 @@
 
     <style name="TableTextViewRightStyle" parent="TableTextViewStyle">
         <item name="android:gravity">center|end</item>
-        <item name="android:layout_weight">2</item>
     </style>
 
     <style name="TableTextViewLeftStyle" parent="TableTextViewStyle">
         <item name="android:gravity">center|start</item>
-        <item name="android:layout_weight">1</item>
     </style>
 
 
