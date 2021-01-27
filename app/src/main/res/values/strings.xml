@@ -14,6 +14,10 @@
     <string name="action_save_data">Daten speichern</string>
     <string name="action_import_gpx">GPX-Datei importieren</string>
     <string name="menu_google_maps">Karte</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="menu_location_data">Lokalisierungsdaten</string>
+    <string name="menu_sensor_data">Sensordaten</string>
+    <string name="menu_cdf_diagram">CDF Diagramm</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -30,8 +34,14 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="menu_location_data">Lokalisierungsdaten</string>
     <string name="setting_location_header">Lokalisierung</string>
+
+
+    <string name="setting_location_android_api">setting_location_android_api</string>
+    <string name="setting_location_android_api_title">Lokalisierung über Android API</string>
+
+    <string name="setting_location_fused_location_api">setting_location_fused_location_api</string>
+    <string name="setting_location_fused_location_api_title">Lokalisierung über Fused Location API</string>
 
     <string name="setting_location_enable_gps">setting_location_enable_gps</string>
     <string name="setting_google_maps_follow_location">setting_google_maps_follow_location</string>
@@ -40,7 +50,7 @@
     <string name="setting_location_enable_network">setting_location_enable_network</string>
     <string name="setting_location_update_time">setting_location_update_time</string>
     <string name="setting_location_min_distance">setting_location_min_distance</string>
-
+    <string name="setting_location_priority">setting_location_priority</string>
 
     <string name="setting_location_enable_gps_title">GPS</string>
     <string name="setting_location_enable_gps_summary_on">GPS-Ortung aktiv</string>
@@ -55,6 +65,8 @@
 
     <string name="setting_location_min_distance_title">Distanz</string>
     <string name="setting_location_min_distance_summary">Legt die minimale Entfernung zwischen zwei Ortungen fest</string>
+
+    <string name="setting_location_priority_title">Priorität</string>
 
     <string name="setting_google_maps_header">Google Maps</string>
 
@@ -72,6 +84,7 @@
     <string name="setting_google_maps_enable_polyline_title">Route anzeigen</string>
     <string name="setting_google_maps_enable_polyline_summary_on">Eine Ortungsverlaufslinie wird angezeit</string>
     <string name="setting_google_maps_enable_polyline_summary_off">keine Route sichtbar</string>
+
     <string name="setting_sensor_header">Sensoren</string>
     <string name="setting_sensor_enable_gyroscope">setting_sensor_enable_gyroscope</string>
     <string name="setting_sensor_enable_gyroscope_title">Gyroscope</string>
@@ -102,7 +115,5 @@
     <string name="reset">Zurücksetzen</string>
     <string name="start">Start</string>
     <string name="next">weiter</string>
-    <string name="setting_location_priority"> setting_location_priority</string>
     <string name="stop">stop</string>
-    <string name="setting_location_enbale_AndroidApi">setting_location_enable_AndroidApi</string>
 </resources>

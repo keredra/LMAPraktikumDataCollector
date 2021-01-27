@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="de.krd.lmapraktikum_datacollector.ui.settings.SettingsFragment"
-        android:label="SettingsFragment" >
+        android:label="@string/menu_settings" >
         <action
             android:id="@+id/action_settingsFragment_to_nav_home"
             app:destination="@id/nav_home" />
@@ -50,7 +50,7 @@
     <fragment
         android:id="@+id/nav_location_data"
         android:name="de.krd.lmapraktikum_datacollector.ui.location_data.LocationDataFragment"
-        android:label="Lokalisierungsdaten"
+        android:label="@string/menu_location_data"
         tools:layout="@layout/fragment_location_data" >
         <action
             android:id="@+id/action_locationDataFragment_to_nav_home"
@@ -59,7 +59,7 @@
     <fragment
         android:id="@+id/nav_settings"
         android:name="de.krd.lmapraktikum_datacollector.ui.settings.SettingsFragment"
-        android:label="SettingsFragment" >
+        android:label="@string/menu_settings" >
         <action
             android:id="@+id/action_nav_settings_to_nav_home2"
             app:destination="@id/nav_home" />
@@ -67,7 +67,7 @@
     <fragment
         android:id="@+id/nav_sensor_data"
         android:name="de.krd.lmapraktikum_datacollector.ui.sensor_data.SensorDataFragment"
-        android:label="Sensordaten" >
+        android:label="@string/menu_sensor_data" >
         <action
             android:id="@+id/action_nav_settings_to_nav_home"
             app:destination="@id/nav_home" />
@@ -75,7 +75,7 @@
     <fragment
         android:id="@+id/nav_cdf"
         android:name="de.krd.lmapraktikum_datacollector.ui.cdf.CdfFragment"
-        android:label="CDF Diagramm" >
+        android:label="@string/menu_cdf_diagram" >
         <action
             android:id="@+id/action_nav_cdf_to_nav_home"
             app:destination="@id/nav_home" />

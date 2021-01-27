@@ -46,27 +46,36 @@
         app:title="@string/setting_location_header"
         app:icon="@drawable/ic_location">
         <SwitchPreferenceCompat
-            android:key="@string/setting_location_enbale_AndroidApi"
+            android:key="@string/setting_location_android_api"
             android:title="Android API"
-            app:summaryOn="Loaklisierung über Android API"
-            app:summaryOff="Lokalisierung über Google API"
+            app:summaryOn="@string/setting_location_android_api_title"
             android:defaultValue="true"/>
-            <SwitchPreferenceCompat
-                app:key="@string/setting_location_enable_gps"
-                app:summaryOff="@string/setting_location_enable_gps_summary_off"
-                app:summaryOn="@string/setting_location_enable_gps_summary_on"
-                app:title="@string/setting_location_enable_gps_title" />
-            <SwitchPreferenceCompat
-                app:key="@string/setting_location_enable_network"
-                app:summaryOff="@string/setting_location_enable_network_summary_off"
-                app:summaryOn="@string/setting_location_enable_network_summary_on"
-                app:title="@string/setting_location_enable_network_title" />
+
+        <SwitchPreferenceCompat
+            android:key="@string/setting_location_fused_location_api"
+            android:title="Fused Location API"
+            app:summaryOn="@string/setting_location_fused_location_api_title"
+            android:defaultValue="false"/>
+
+        <SwitchPreferenceCompat
+            app:key="@string/setting_location_enable_gps"
+            app:summaryOff="@string/setting_location_enable_gps_summary_off"
+            app:summaryOn="@string/setting_location_enable_gps_summary_on"
+            app:title="@string/setting_location_enable_gps_title"
+            app:dependency="@string/setting_location_android_api" />
+        <SwitchPreferenceCompat
+            app:key="@string/setting_location_enable_network"
+            app:summaryOff="@string/setting_location_enable_network_summary_off"
+            app:summaryOn="@string/setting_location_enable_network_summary_on"
+            app:title="@string/setting_location_enable_network_title"
+            app:dependency="@string/setting_location_android_api" />
         <ListPreference
             android:key="@string/setting_location_priority"
-            android:title="Priority"
-            android:entries="@array/listPriority"
-            android:entryValues="@array/listPriorityValues"
-            android:defaultValue="0"/>
+            android:title="@string/setting_location_priority_title"
+            android:entries="@array/list_priorities"
+            android:entryValues="@array/list_priorities_values"
+            android:defaultValue="100"
+            android:dependency="@string/setting_location_fused_location_api"/>
         <EditTextPreference
             android:defaultValue="5000"
             android:inputType="number"
