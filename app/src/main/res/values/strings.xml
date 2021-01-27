@@ -54,6 +54,7 @@
     <string name="setting_location_priority">setting_location_priority</string>
     <string name="setting_location_strategy">setting_location_strategy</string>
     <string name="setting_location_max_speed">setting_location_max_speed</string>
+    <string name="setting_location_custom_distance_validation">setting_location_custom_distance_validation</string>
 
     <string name="setting_location_enable_gps_title">GPS</string>
     <string name="setting_location_enable_gps_summary_on">GPS-Ortung aktiv</string>
@@ -66,6 +67,11 @@
     <string name="setting_location_movement_detection_summary_off">Lokalisierung ohne sensorbasierte Bewegungserkennung</string>
     <string name="setting_location_movement_detection_summary_on">Lokalisierung nur nach sensorbasierter Bewegungserkennung</string>
     <string name="setting_location_movement_detection_title">Bewegungserkennung</string>
+
+
+    <string name="setting_location_custom_distance_validation_summary_off">Standard API Distanzprüfung wird verwendet</string>
+    <string name="setting_location_custom_distance_validation_summary_on">Entfernung zwischen zwei Lokalisierungen werden intern geprüft</string>
+    <string name="setting_location_custom_distance_validation_title">Unabhängige Distanzprüfung</string>
 
     <string name="setting_location_strategy_title">Strategie</string>
 

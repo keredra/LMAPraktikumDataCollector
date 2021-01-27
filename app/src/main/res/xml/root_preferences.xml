@@ -75,6 +75,12 @@
             app:summaryOff="@string/setting_location_movement_detection_summary_off"
             app:summaryOn="@string/setting_location_movement_detection_summary_on"
             app:title="@string/setting_location_movement_detection_title" />
+
+        <SwitchPreferenceCompat
+            app:key="@string/setting_location_custom_distance_validation"
+            app:summaryOff="@string/setting_location_custom_distance_validation_summary_off"
+            app:summaryOn="@string/setting_location_custom_distance_validation_summary_on"
+            app:title="@string/setting_location_custom_distance_validation_title" />
         <ListPreference
             android:key="@string/setting_location_strategy"
             android:title="@string/setting_location_strategy_title"
@@ -104,7 +110,7 @@
             android:singleLine="true"
             android:title="@string/setting_location_min_distance_title" />
         <EditTextPreference
-            android:defaultValue="0.0"
+            android:defaultValue="1.0"
             android:inputType="numberDecimal"
             android:digits="1234567890."
             android:key="@string/setting_location_max_speed"

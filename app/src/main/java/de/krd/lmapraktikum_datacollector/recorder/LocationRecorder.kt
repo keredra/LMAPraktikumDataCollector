@@ -28,11 +28,22 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                     && l1.longitude == l2.longitude
                     && l1.accuracy == l2.accuracy
         }
+
+        enum class Strategies(val id: Int) {
+            PERIODIC(1),
+            DISTANCE_PERIODIC(2),
+            DISTANCE_STATIC_SPEED(3),
+            DISTANCE_DYNAMIC_SPEED(4)
+        }
     }
 
 
     private var useAndroidApi = true
     private var useFusedLocationApi = false
+    private var useCustomDistanceValidation = false
+    private var useSensorBasedMovementDetection = false
+
+    private var strategy = Strategies.PERIODIC.id
 
     private var run = false
     private var gpsEnabled = false
@@ -40,6 +51,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private var activity: PermissionActivity
     private var minTimeMs = 0L
     private var minDistanceM = 0.0f
+    private var maxSpeed = 1.0f
     private var interval = 10000L
     private var fastestInterval = 5000L
     private var priority = PRIORITY_HIGH_ACCURACY
@@ -238,6 +250,30 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             preferences,
             R.string.setting_location_fused_location_api
         )
+
+        useCustomDistanceValidation = PreferenceHelper.getBoolean(
+            activity,
+            preferences,
+            R.string.setting_location_custom_distance_validation
+        )
+
+        strategy = PreferenceHelper.getInt(
+            activity,
+            preferences,
+            R.string.setting_location_strategy
+        )
+
+        maxSpeed = PreferenceHelper.getFloat(
+            activity,
+            preferences,
+            R.string.setting_location_max_speed
+        )
+
+        useSensorBasedMovementDetection = PreferenceHelper.getBoolean(
+            activity,
+            preferences,
+            R.string.setting_location_movement_detection
+        )
     }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
@@ -247,7 +283,11 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             activity.getString(R.string.setting_location_priority),
             activity.getString(R.string.setting_location_android_api),
             activity.getString(R.string.setting_location_fused_location_api),
-            activity.getString(R.string.setting_location_min_distance) -> {
+            activity.getString(R.string.setting_location_min_distance),
+            activity.getString(R.string.setting_location_custom_distance_validation),
+            activity.getString(R.string.setting_location_strategy),
+            activity.getString(R.string.setting_location_max_speed),
+            activity.getString(R.string.setting_location_movement_detection)  -> {
                 loadPreferences()
                 if (run) {
                     removeLocationRequests()
