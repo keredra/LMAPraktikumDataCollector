@@ -1,5 +1,6 @@
 package de.krd.lmapraktikum_datacollector.recorder
 
+import android.util.Log
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -16,45 +17,42 @@ class LocationDataClient() {
     private var client: Socket? = null
     private val gson = Gson()
     private val connected = MutableLiveData<Boolean>(false)
-    private val onConnectListener = Emitter.Listener {
-        connected.postValue(true)
-    }
-    private val onDisconnectListener = Emitter.Listener {
-        connected.postValue(true)
+
+    private val onStateChangeListener = Emitter.Listener {
+        connected.postValue(client!!.connected())
     }
 
-    public fun observeStatus(owner: LifecycleOwner, observer: Observer<Boolean>) {
+
+    fun observeStatus(owner: LifecycleOwner, observer: Observer<Boolean>) {
         connected.observe(owner, observer)
     }
 
-    public fun connect(address: String) {
+    fun connect(address: String) {
         disconnect()
         try {
-            client = IO.socket("http://"+address)
+            client = IO.socket("http://"+address+"/")
+            client?.connect()
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
         client?.let {
-            it.on(Socket.EVENT_CONNECT, onConnectListener)
-            it.on(Socket.EVENT_DISCONNECT, onDisconnectListener)
-            it.on(Socket.EVENT_CONNECT_ERROR, onDisconnectListener)
+            it.on(Socket.EVENT_CONNECT, onStateChangeListener)
+            it.on(Socket.EVENT_DISCONNECT, onStateChangeListener)
+            it.on(Socket.EVENT_CONNECT_ERROR, onStateChangeListener)
         }
 
     }
 
-    public fun disconnect() {
-        client?.let{
-            connected.postValue(false)
-        }
+    fun disconnect() {
         client?.disconnect()
     }
 
-    public fun sendLocationData(contextName: String, locationData: LocationData) {
+    fun sendLocationData(contextName: String, locationData: LocationData) {
         val locationDataJson = JSONObject()
 
         locationDataJson.put("context", contextName)
-        locationDataJson.put("data", gson.toJson(locationData))
+        locationDataJson.put("data", JSONObject(gson.toJson(locationData)))
 
         client?.emit("LocationData", locationDataJson)
     }

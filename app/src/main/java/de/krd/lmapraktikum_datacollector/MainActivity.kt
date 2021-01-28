@@ -87,6 +87,7 @@ class MainActivity : PermissionActivity(), SharedPreferences.OnSharedPreferenceC
 
 
         locationRecorder.locationDataClient.observeStatus(this, Observer { status ->
+
             tvConnectionStatus.text = getString(
                 if (status) R.string.connection_status_connected
                 else R.string.connection_status_disconnected

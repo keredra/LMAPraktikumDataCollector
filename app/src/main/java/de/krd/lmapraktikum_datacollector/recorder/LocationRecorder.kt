@@ -117,6 +117,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         androidApiLocationListener = createAndroidApiLocationListener()
         sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorEventListener = createSensorEventListener()
+
     }
 
     fun start() {
@@ -127,7 +128,9 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         }
 
         if (sendDataToRemoteServer) {
-            locationDataClient.connect(remoteServerAddress)
+            activity.withPermission(Manifest.permission.INTERNET) {
+                locationDataClient.connect(remoteServerAddress)
+            }
         }
     }
 
