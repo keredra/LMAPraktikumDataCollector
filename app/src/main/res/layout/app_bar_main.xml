@@ -18,6 +18,16 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/Theme.LMAPraktikumDataCollector.PopupOverlay" />
 
+        <TextView android:id="@+id/tvConnectionStatus"
+            android:text="@string/connection_status_disconnected"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/red"
+            android:visibility="visible"/>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <ToggleButton

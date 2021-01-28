@@ -57,6 +57,9 @@
     <string name="setting_location_custom_distance_validation">setting_location_custom_distance_validation</string>
     <string name="setting_location_movement_detection_threshold">setting_location_movement_detection_threshold</string>
     <string name="setting_location_movement_detection_timeout">setting_location_movement_detection_timeout</string>
+    <string name="setting_location_remote_server_address">setting_location_remote_server_address</string>
+    <string name="setting_location_remote_server">setting_location_remote_server</string>
+    <string name="setting_location_remote_server_context">setting_location_remote_server_context</string>
 
     <string name="setting_location_enable_gps_title">GPS</string>
     <string name="setting_location_enable_gps_summary_on">GPS-Ortung aktiv</string>
@@ -87,6 +90,12 @@
 
     <string name="setting_location_priority_title">Priorität</string>
     <string name="setting_location_max_speed_title">Höchstgeschwindigkeit (km/h)</string>
+
+    <string name="setting_location_remote_server_context_title">Lokalisierungsserver - Kontextname</string>
+    <string name="setting_location_remote_server_address_title">Lokalisierungsserver - Adresse</string>
+    <string name="setting_location_remote_server_summary_off">es werden keine Lokalisierungsdaten übertragen</string>
+    <string name="setting_location_remote_server_summary_on">Lokalisierungsdaten werden an den externen Server übertragen</string>
+    <string name="setting_location_remote_server_title">Lokalisierungsdaten senden</string>
 
     <string name="setting_google_maps_header">Google Maps</string>
 
@@ -144,4 +153,6 @@
     <string name="current_ts_xyz">Aktuell (X,Y,Z)</string>
     <string name="last_ts_latlng">Letzte (Lat,Lng,Alt,Acc)</string>
     <string name="current_ts_latlng">Aktuell (Lat,Lng,Alt,Acc)</string>
+    <string name="connection_status_disconnected">Getrennt</string>
+    <string name="connection_status_connected">Verbunden</string>
 </resources>

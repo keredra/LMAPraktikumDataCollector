@@ -2,45 +2,53 @@ package de.krd.lmapraktikum_datacollector.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.fragment.app.Fragment
-import de.krd.lmapraktikum_datacollector.R
 import java.lang.Exception
 
 object PreferenceHelper {
 
-    fun getBoolean(context: Context, preferences: SharedPreferences, stringRessourceId: Int) : Boolean {
+    fun getBoolean(context: Context, preferences: SharedPreferences, stringResourceId: Int) : Boolean {
         var result = false
         try {
-            result = preferences.getBoolean(context.getString(stringRessourceId), false)
+            result = preferences.getBoolean(context.getString(stringResourceId), false)
         } catch (e: Exception) {
 
         }
         return result
     }
 
-    fun getFloat(context: Context, preferences: SharedPreferences, stringRessourceId: Int) : Float {
+    fun getFloat(context: Context, preferences: SharedPreferences, stringResourceId: Int) : Float {
         var result = 0.0f
         try {
-            result = preferences.getString(context.getString(stringRessourceId), "0.0")!!.toFloat()
+            result = preferences.getString(context.getString(stringResourceId), "0.0")!!.toFloat()
         } catch (e: Exception) {
 
         }
         return result
     }
 
-    fun getInt(context: Context, preferences: SharedPreferences, stringRessourceId: Int) : Int {
+    fun getInt(context: Context, preferences: SharedPreferences, stringResourceId: Int) : Int {
         var result = 0
         try {
-            result = preferences.getString(context.getString(stringRessourceId), "0")!!.toInt()
+            result = preferences.getString(context.getString(stringResourceId), "0")!!.toInt()
         } catch (e: Exception) {
 
         }
         return result
     }
-    fun getLong(context: Context, preferences: SharedPreferences, stringRessourceId: Int) : Long {
+    fun getLong(context: Context, preferences: SharedPreferences, stringResourceId: Int) : Long {
         var result = 0L
         try {
-            result = preferences.getString(context.getString(stringRessourceId), "0")!!.toLong()
+            result = preferences.getString(context.getString(stringResourceId), "0")!!.toLong()
+        } catch (e: Exception) {
+
+        }
+        return result
+    }
+
+    fun getString(context: Context, preferences: SharedPreferences, stringResourceId: Int) : String {
+        var result = ""
+        try {
+            result = preferences.getString(context.getString(stringResourceId), "0")!!
         } catch (e: Exception) {
 
         }

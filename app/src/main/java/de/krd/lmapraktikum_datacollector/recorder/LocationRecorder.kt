@@ -51,11 +51,16 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         private const val HOUR : Long = 60 * MINUTE
     }
 
+    val locationDataClient = LocationDataClient()
 
     private var useAndroidApi = true
     private var useFusedLocationApi = false
     private var useCustomDistanceValidation = false
     private var useSensorBasedMovementDetection = false
+    private var sendDataToRemoteServer = false
+
+    private var remoteServerAddress = "argon-server.dynv6.net:8000"
+    private var contextName = ""
 
     private var strategy = Strategies.PERIODIC.id
 
@@ -91,6 +96,8 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
     private val androidApiLocationListener: LocationListener
     private val sensorEventListener : SensorEventListener
 
+
+
     private var locationRequest: LocationRequest? = null
 
 
@@ -118,12 +125,17 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         if (useSensorBasedMovementDetection) {
             startMotionDetection()
         }
+
+        if (sendDataToRemoteServer) {
+            locationDataClient.connect(remoteServerAddress)
+        }
     }
 
     fun stop() {
         run = false
         removeLocationRequests()
         sensorManager.unregisterListener(sensorEventListener)
+        locationDataClient.disconnect()
     }
 
     private fun setLocationRequests() {
@@ -225,10 +237,18 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                         locationResult.lastLocation.altitude,
                         locationResult.lastLocation.accuracy
                     )
-                    model.data.locations.add(location)
+                    addLocationData(location)
                 }
             }
         }
+    }
+
+    private fun addLocationData(locationData: LocationData) {
+        model.data.locations.add(locationData)
+        if (sendDataToRemoteServer) {
+            locationDataClient.sendLocationData(contextName, locationData)
+        }
+
     }
 
     private fun createAndroidApiLocationListener() : LocationListener {
@@ -239,7 +259,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             if (locations.value.isEmpty() || !isLastProviderLocation(locationData)) {
                 when(strategy) {
                     Strategies.PERIODIC.id -> {
-                        locations.add(locationData)
+                        addLocationData(locationData)
                     }
                     Strategies.PERIODIC_DISTANCE.id,
                     Strategies.DISTANCE.id -> {
@@ -249,7 +269,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                                 locations.add(locationData)
                             }
                         } else {
-                            locations.add(locationData)
+                            addLocationData(locationData)
                         }
                     }
                     Strategies.DISTANCE_STATIC_SPEED.id -> {
@@ -259,7 +279,7 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                                 locations.add(locationData)
                             }
                         } else {
-                            locations.add(locationData)
+                            addLocationData(locationData)
                         }
                         val lastLocation = locations.value.last().toLocation()
                         val distanceToLastLocation = lastLocation.distanceTo(location)
@@ -276,10 +296,10 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                         if (useCustomDistanceValidation && locations.value.size >= 1) {
                             val lastLocation = locations.value.last().toLocation()
                             if (lastLocation.distanceTo(location) >= minDistance) {
-                                locations.add(locationData)
+                                addLocationData(locationData)
                             }
                         } else {
-                            locations.add(locationData)
+                            addLocationData(locationData)
                         }
                         val lastLocation = locations.value.last().toLocation()
                         val distanceToLastLocation = lastLocation.distanceTo(location)
@@ -409,6 +429,24 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                 preferences,
                 R.string.setting_location_movement_detection_timeout
         )
+
+        sendDataToRemoteServer = PreferenceHelper.getBoolean(
+            activity,
+            preferences,
+            R.string.setting_location_remote_server
+        )
+
+        remoteServerAddress = PreferenceHelper.getString(
+            activity,
+            preferences,
+            R.string.setting_location_remote_server_address
+        )
+
+        contextName = PreferenceHelper.getString(
+            activity,
+            preferences,
+            R.string.setting_location_remote_server_context
+        )
     }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
@@ -424,7 +462,10 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             activity.getString(R.string.setting_location_max_speed),
             activity.getString(R.string.setting_location_movement_detection),
             activity.getString(R.string.setting_location_movement_detection_threshold),
-            activity.getString(R.string.setting_location_movement_detection_timeout)  -> {
+            activity.getString(R.string.setting_location_movement_detection_timeout),
+            activity.getString(R.string.setting_location_remote_server),
+            activity.getString(R.string.setting_location_remote_server_address),
+            activity.getString(R.string.setting_location_remote_server_context)   -> {
                 loadPreferences()
                 if (run) {
                     start()

@@ -138,6 +138,30 @@
             android:singleLine="true"
             android:title="@string/setting_location_max_speed_title" />
 
+        <EditTextPreference
+            android:defaultValue="argon-server.dynv6.net:8000"
+            android:inputType="text"
+            android:key="@string/setting_location_remote_server_address"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/setting_location_remote_server_address_title" />
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:inputType="text"
+            android:key="@string/setting_location_remote_server_context"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/setting_location_remote_server_context_title"
+            app:dependency="@string/setting_location_remote_server_address" />
+
+        <SwitchPreferenceCompat
+            app:key="@string/setting_location_remote_server"
+            app:summaryOff="@string/setting_location_remote_server_summary_off"
+            app:summaryOn="@string/setting_location_remote_server_summary_on"
+            app:title="@string/setting_location_remote_server_title"
+            app:dependency="@string/setting_location_remote_server_context" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

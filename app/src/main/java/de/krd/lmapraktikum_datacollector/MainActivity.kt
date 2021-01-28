@@ -1,23 +1,31 @@
 package de.krd.lmapraktikum_datacollector
 
 import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
 import com.google.android.material.navigation.NavigationView
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 import de.krd.lmapraktikum_datacollector.recorder.LocationRecorder
 import de.krd.lmapraktikum_datacollector.recorder.SensorRecorder
+import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
 import kotlinx.android.synthetic.main.app_bar_main.*
 import org.w3c.dom.Document
 import java.io.*
@@ -26,16 +34,17 @@ import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.jvm.Throws
 
 
-class MainActivity : PermissionActivity() {
+class MainActivity : PermissionActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val model: GlobalModel by viewModels()
     private lateinit var locationRecorder: LocationRecorder
     private lateinit var sensorRecorder: SensorRecorder
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var preferences: SharedPreferences
 
     companion object {
         private val OPEN_REQUEST_CODE = 41
         private val SAVE_REQUEST_CODE = 42
-        private val IMPORT_REQUEST_CODE=43
+        private val IMPORT_REQUEST_CODE = 43
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,14 +72,28 @@ class MainActivity : PermissionActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
-                setOf(
-                        R.id.nav_home,
-                        R.id.nav_location_data,
-                        R.id.nav_sensor_data
-                ), drawerLayout
+            setOf(
+                R.id.nav_home,
+                R.id.nav_location_data,
+                R.id.nav_sensor_data
+            ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        loadPreferences()
+        preferences.registerOnSharedPreferenceChangeListener(this)
+
+
+        locationRecorder.locationDataClient.observeStatus(this, Observer { status ->
+            tvConnectionStatus.text = getString(
+                if (status) R.string.connection_status_connected
+                else R.string.connection_status_disconnected
+            )
+            tvConnectionStatus.background =
+                ColorDrawable(getColor(if (status) R.color.green else R.color.red))
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -122,8 +145,8 @@ class MainActivity : PermissionActivity() {
     }
 
     override fun onActivityResult(
-            requestCode: Int, resultCode: Int,
-            resultData: Intent?
+        requestCode: Int, resultCode: Int,
+        resultData: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, resultData)
         var currentUri: Uri? = null
@@ -144,13 +167,13 @@ class MainActivity : PermissionActivity() {
                         // Handle error here
                     }
                 }
-            } else if (requestCode == IMPORT_REQUEST_CODE){
+            } else if (requestCode == IMPORT_REQUEST_CODE) {
                 if (resultData != null) {
                     currentUri = resultData.data!!
                     try {
                         val content: String? = readFileContent(currentUri)
                         Log.i("FileReader", "" + content)
-                        model.data.loadGpx(""+content)
+                        model.data.loadGpx("" + content)
                     } catch (e: IOException) {
                         // Handle error here
                     }
@@ -163,9 +186,9 @@ class MainActivity : PermissionActivity() {
     private fun readFileContent(uri: Uri): String? {
         val inputStream: InputStream = contentResolver.openInputStream(uri)!!
         val reader = BufferedReader(
-                InputStreamReader(
-                        inputStream
-                )
+            InputStreamReader(
+                inputStream
+            )
         )
         val stringBuilder = StringBuilder()
         reader.forEachLine {
@@ -191,6 +214,25 @@ class MainActivity : PermissionActivity() {
             e.printStackTrace()
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+
+    private fun loadPreferences() {
+        if (PreferenceHelper.getBoolean(
+                this, preferences,
+                R.string.setting_location_remote_server
+            )
+        ) {
+            tvConnectionStatus.visibility = View.VISIBLE
+        } else {
+            tvConnectionStatus.visibility = View.GONE
+        }
+    }
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        when (key) {
+            getString(R.string.setting_location_remote_server) -> {
+                loadPreferences()
+            }
         }
     }
 }
