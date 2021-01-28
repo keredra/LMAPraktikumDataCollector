@@ -31,4 +31,15 @@ data class LocationData(
         result += ""+ String.format("%.0f", accuracy) + ""
         return result
     }
+
+    fun toLocation() : Location {
+        val location = Location(provider)
+        location.time
+        location.latitude = latitude
+        location.longitude = longitude
+        location.altitude = altitude
+        location.accuracy = accuracy
+
+        return location
+    }
 }
