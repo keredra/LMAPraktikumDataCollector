@@ -313,8 +313,6 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                         }
                     }
                 }
-            } else {
-
             }
         }
     }
