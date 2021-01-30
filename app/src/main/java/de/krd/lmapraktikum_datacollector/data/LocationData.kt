@@ -9,7 +9,7 @@ data class LocationData(
     val longitude: Double,
     val altitude: Double,
     val accuracy: Float,
-    val isFiltered: Boolean
+    var isFiltered: Boolean
 ) {
 
     companion object {

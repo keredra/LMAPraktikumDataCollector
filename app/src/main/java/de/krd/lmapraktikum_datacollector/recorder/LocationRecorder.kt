@@ -269,7 +269,8 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                     Strategies.DISTANCE.id -> {
                         if (useCustomDistanceValidation && locations.value.size >= 1) {
                             val lastLocation = locations.value.last().toLocation()
-                            addLocationData(locationData, lastLocation.distanceTo(location) >= minDistance)
+                            locationData.isFiltered = lastLocation.distanceTo(location) < minDistance
+                            addLocationData(locationData, !locationData.isFiltered)
                         } else {
                             addLocationData(locationData, true)
                         }
@@ -277,7 +278,8 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                     Strategies.DISTANCE_STATIC_SPEED.id -> {
                         if (useCustomDistanceValidation && locations.value.size >= 1) {
                             val lastLocation = locations.value.last().toLocation()
-                            addLocationData(locationData, lastLocation.distanceTo(location) >= minDistance)
+                            locationData.isFiltered = lastLocation.distanceTo(location) < minDistance
+                            addLocationData(locationData, !locationData.isFiltered)
                         } else {
                             addLocationData(locationData, true)
                         }
@@ -295,7 +297,8 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                     Strategies.DISTANCE_DYNAMIC_SPEED.id -> {
                         if (useCustomDistanceValidation && locations.value.size >= 1) {
                             val lastLocation = locations.value.last().toLocation()
-                            addLocationData(locationData, lastLocation.distanceTo(location) >= minDistance)
+                            locationData.isFiltered = lastLocation.distanceTo(location) < minDistance
+                            addLocationData(locationData, !locationData.isFiltered)
                         } else {
                             addLocationData(locationData, true)
                         }
