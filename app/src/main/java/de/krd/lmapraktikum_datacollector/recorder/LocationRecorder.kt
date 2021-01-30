@@ -238,7 +238,8 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                         locationResult.lastLocation.latitude,
                         locationResult.lastLocation.longitude,
                         locationResult.lastLocation.altitude,
-                        locationResult.lastLocation.accuracy
+                        locationResult.lastLocation.accuracy,
+                        false
                     )
                     addLocationData(location)
                 }
@@ -246,9 +247,9 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    private fun addLocationData(locationData: LocationData) {
+    private fun addLocationData(locationData: LocationData, sendToServer: Boolean = false) {
         model.data.locations.add(locationData)
-        if (sendDataToRemoteServer) {
+        if (sendToServer && sendDataToRemoteServer) {
             locationDataClient.sendLocationData(contextName, locationData)
         }
 
@@ -262,27 +263,23 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
             if (locations.value.isEmpty() || !isLastProviderLocation(locationData)) {
                 when(strategy) {
                     Strategies.PERIODIC.id -> {
-                        addLocationData(locationData)
+                        addLocationData(locationData, true)
                     }
                     Strategies.PERIODIC_DISTANCE.id,
                     Strategies.DISTANCE.id -> {
                         if (useCustomDistanceValidation && locations.value.size >= 1) {
                             val lastLocation = locations.value.last().toLocation()
-                            if (lastLocation.distanceTo(location) >= minDistance) {
-                                locations.add(locationData)
-                            }
+                            addLocationData(locationData, lastLocation.distanceTo(location) >= minDistance)
                         } else {
-                            addLocationData(locationData)
+                            addLocationData(locationData, true)
                         }
                     }
                     Strategies.DISTANCE_STATIC_SPEED.id -> {
                         if (useCustomDistanceValidation && locations.value.size >= 1) {
                             val lastLocation = locations.value.last().toLocation()
-                            if (lastLocation.distanceTo(location) >= minDistance) {
-                                locations.add(locationData)
-                            }
+                            addLocationData(locationData, lastLocation.distanceTo(location) >= minDistance)
                         } else {
-                            addLocationData(locationData)
+                            addLocationData(locationData, true)
                         }
                         val lastLocation = locations.value.last().toLocation()
                         val distanceToLastLocation = lastLocation.distanceTo(location)
@@ -298,11 +295,9 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                     Strategies.DISTANCE_DYNAMIC_SPEED.id -> {
                         if (useCustomDistanceValidation && locations.value.size >= 1) {
                             val lastLocation = locations.value.last().toLocation()
-                            if (lastLocation.distanceTo(location) >= minDistance) {
-                                addLocationData(locationData)
-                            }
+                            addLocationData(locationData, lastLocation.distanceTo(location) >= minDistance)
                         } else {
-                            addLocationData(locationData)
+                            addLocationData(locationData, true)
                         }
                         val lastLocation = locations.value.last().toLocation()
                         val distanceToLastLocation = lastLocation.distanceTo(location)
@@ -318,6 +313,8 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                         }
                     }
                 }
+            } else {
+
             }
         }
     }

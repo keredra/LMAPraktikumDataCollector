@@ -8,18 +8,20 @@ data class LocationData(
     val latitude: Double,
     val longitude: Double,
     val altitude: Double,
-    val accuracy: Float
+    val accuracy: Float,
+    val isFiltered: Boolean
 ) {
 
     companion object {
-        fun fromLocation(location: Location) : LocationData {
+        fun fromLocation(location: Location, isFiltered: Boolean = false) : LocationData {
             return LocationData(
                 location.time,
                 location.provider,
                 location.latitude,
                 location.longitude,
                 location.altitude,
-                location.accuracy
+                location.accuracy,
+                isFiltered
             )
         }
     }
