@@ -8,18 +8,15 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Looper
 import androidx.preference.PreferenceManager
-import android.util.Log
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.*
 import de.krd.lmapraktikum_datacollector.GlobalModel
 import de.krd.lmapraktikum_datacollector.R
 import de.krd.lmapraktikum_datacollector.data.LocationData
-import de.krd.lmapraktikum_datacollector.data.SensorData
 import de.krd.lmapraktikum_datacollector.permission.PermissionActivity
 import de.krd.lmapraktikum_datacollector.utils.PreferenceHelper
 import kotlinx.coroutines.GlobalScope
@@ -255,36 +252,42 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
 
     }
 
+    private fun getLastValidLocationData() : LocationData? {
+        return model.data.locations.value.findLast { !it.isFiltered }
+    }
+
     private fun createAndroidApiLocationListener() : LocationListener {
         return LocationListener { location ->
-            val locations = model.data.locations
             val locationData = LocationData.fromLocation(location)
+            val lastValidLocationData = getLastValidLocationData()
 
-            if (locations.value.isEmpty() || !isLastProviderLocation(locationData)) {
+            if (lastValidLocationData == null || !isLastProviderLocation(locationData)) {
                 when(strategy) {
                     Strategies.PERIODIC.id -> {
                         addLocationData(locationData, true)
                     }
                     Strategies.PERIODIC_DISTANCE.id,
                     Strategies.DISTANCE.id -> {
-                        if (useCustomDistanceValidation && locations.value.size >= 1) {
-                            val lastLocation = locations.value.last().toLocation()
-                            locationData.isFiltered = lastLocation.distanceTo(location) < minDistance
+                        if (useCustomDistanceValidation && lastValidLocationData != null) {
+                            locationData.isFiltered = lastValidLocationData.toLocation().distanceTo(location) < minDistance
                             addLocationData(locationData, !locationData.isFiltered)
                         } else {
                             addLocationData(locationData, true)
                         }
                     }
                     Strategies.DISTANCE_STATIC_SPEED.id -> {
-                        if (useCustomDistanceValidation && locations.value.size >= 1) {
-                            val lastLocation = locations.value.last().toLocation()
-                            locationData.isFiltered = lastLocation.distanceTo(location) < minDistance
+                        var distanceToLastLocation = 0f
+                        if (useCustomDistanceValidation && lastValidLocationData != null) {
+                            distanceToLastLocation = lastValidLocationData.toLocation().distanceTo(location)
+                            locationData.isFiltered = distanceToLastLocation < minDistance
                             addLocationData(locationData, !locationData.isFiltered)
+
+                            if (!locationData.isFiltered) {
+                                distanceToLastLocation = 0f
+                            }
                         } else {
                             addLocationData(locationData, true)
                         }
-                        val lastLocation = locations.value.last().toLocation()
-                        val distanceToLastLocation = lastLocation.distanceTo(location)
                         locationManager.removeUpdates(androidApiLocationListener)
                         GlobalScope.launch {
                             delay(((minDistance-distanceToLastLocation) / (maxSpeed * KM / HOUR)).toLong())
@@ -295,16 +298,19 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
 
                     }
                     Strategies.DISTANCE_DYNAMIC_SPEED.id -> {
-                        if (useCustomDistanceValidation && locations.value.size >= 1) {
-                            val lastLocation = locations.value.last().toLocation()
-                            locationData.isFiltered = lastLocation.distanceTo(location) < minDistance
+                        var distanceToLastLocation = 0f
+                        if (useCustomDistanceValidation && lastValidLocationData != null) {
+                            distanceToLastLocation = lastValidLocationData.toLocation().distanceTo(location)
+                            locationData.isFiltered = distanceToLastLocation < minDistance
                             addLocationData(locationData, !locationData.isFiltered)
+
+                            if (!locationData.isFiltered) {
+                                distanceToLastLocation = 0f
+                            }
                         } else {
                             addLocationData(locationData, true)
                         }
-                        val lastLocation = locations.value.last().toLocation()
-                        val distanceToLastLocation = lastLocation.distanceTo(location)
-                        val currentSpeed = if (lastLocation.speed > 0) lastLocation.speed * SECOND else maxSpeed * KM / HOUR
+                        val currentSpeed = if (location.speed > 0) location.speed * SECOND else maxSpeed * KM / HOUR
                         val timeToNextFix = ((minDistance-distanceToLastLocation) / currentSpeed).toLong()
 
                         locationManager.removeUpdates(androidApiLocationListener)
