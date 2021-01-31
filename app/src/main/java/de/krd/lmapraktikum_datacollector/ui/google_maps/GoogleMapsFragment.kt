@@ -187,7 +187,11 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
                 accuracyCircleOptions.strokePattern(listOf(Dot()))
                 accuracyCircleOptions.strokeWidth(5.0f)
 
-                when (it.provider.toUpperCase()) {
+                if (it.isFiltered) {
+                    circleOptions.fillColor(Color.GRAY)
+                    accuracyCircleOptions.strokeColor(Color.GRAY)
+                }
+                else when (it.provider.toUpperCase()) {
                     "GPS" -> {
                         circleOptions.fillColor(Color.RED)
                         accuracyCircleOptions.strokeColor(Color.RED)
