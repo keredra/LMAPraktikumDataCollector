@@ -351,9 +351,13 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                             timeoutMovementStartTime = currentTime
                             timeoutMovement = 0f
 
-                        } else if (movementDetectionTimedOut && timeoutMovement > movementDetectionThreshold) {
-                            movementDetectionTimedOut = false
-                            setLocationRequests()
+                        } else if (timeoutMovement > movementDetectionThreshold) {
+                            if(movementDetectionTimedOut) {
+                                movementDetectionTimedOut = false
+                                setLocationRequests()
+                            }
+                            timeoutMovementStartTime = currentTime
+                            timeoutMovement = 0f
                         }
                     }
                 }
