@@ -299,8 +299,10 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                     }
                     Strategies.DISTANCE_DYNAMIC_SPEED.id -> {
                         var distanceToLastLocation = 0f
+                        var currentSpeed = 0.0f
                         if (useCustomDistanceValidation && lastValidLocationData != null) {
                             distanceToLastLocation = lastValidLocationData.toLocation().distanceTo(location)
+                            currentSpeed = distanceToLastLocation / ((locationData.timestamp - lastValidLocationData.timestamp) / SECOND)
                             locationData.isFiltered = distanceToLastLocation < minDistance
                             addLocationData(locationData, !locationData.isFiltered)
 
@@ -310,7 +312,10 @@ class LocationRecorder : SharedPreferences.OnSharedPreferenceChangeListener {
                         } else {
                             addLocationData(locationData, true)
                         }
-                        val currentSpeed = if (location.speed > 0) location.speed * SECOND else maxSpeed * KM / HOUR
+
+                        if (currentSpeed < 0.1 * maxSpeed * KM / HOUR) {
+                            currentSpeed = maxSpeed * KM / HOUR
+                        }
                         val timeToNextFix = ((minDistance-distanceToLastLocation) / currentSpeed).toLong()
 
                         locationManager.removeUpdates(androidApiLocationListener)
