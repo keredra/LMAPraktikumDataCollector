@@ -44,14 +44,14 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     private var follow = true
     private var animationInProgress = false
     private var followJob: Job? = null
-    private var zoomFactor = 0.0f
+    private var zoomFactor = 17.0f
     private var keepFollowing = true
     private var followingDelayTimeMs = 10000L
-    private var showRoute = false
-    private var showAccuracy = false
+    private var showRoute = true
+    private var showAccuracy = true
 
     private var routeStarted = false
-    private lateinit var map: GoogleMap
+    private var map: GoogleMap ?= null
     private lateinit var mapView: MapView
     private lateinit var preferences: SharedPreferences
 
@@ -91,6 +91,9 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
         super.onResume()
         mapView.onResume()
         preferences.registerOnSharedPreferenceChangeListener(this)
+
+        model.data.locations.observe(viewLifecycleOwner, locationsObserver)
+        model.data.route.observe(viewLifecycleOwner, routeObserver)
     }
 
     override fun onPause() {
@@ -109,49 +112,49 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
     /*
      * Assign GoogleMaps Object if fragment is ready
      */
-    override fun onMapReady(googleMap: GoogleMap?) {
-        this.map = googleMap!!
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
 
-        this.map.setOnMapClickListener(OnMapClickListener { position -> // TODO Auto-generated method stub
+        map?.setOnMapClickListener(OnMapClickListener { position -> // TODO Auto-generated method stub
             if (!routeStarted)
                 model.data.route.add(PositionEvaluationData(position, 0L, 0L))
         })
+        map?.setOnCameraMoveStartedListener(this)
 
-        model.data.locations.observe(viewLifecycleOwner, locationsObserver)
-        model.data.route.observe(viewLifecycleOwner, routeObserver)
-
-        map.setOnCameraMoveStartedListener(this)
+        onLocationChange(model.data.locations.value)
+        onPositionEvaluationRouteChange(model.data.route.value)
     }
 
     private fun onPositionEvaluationRouteChange(route: MutableList<PositionEvaluationData>) {
-        var i = 0
-        listOfMarker.forEach { it.remove() }
-        listOfMarker.clear()
-        var actual = true
-        route.forEach { positionEvaluationData ->
-            var drawableId = R.drawable.ic_location_on_red
-            if (actual) {
-                drawableId = R.drawable.ic_location_on_yellow
+        if (map != null) {
+            var i = 0
+            listOfMarker.forEach { it.remove() }
+            listOfMarker.clear()
+            var actual = true
+            route.forEach { positionEvaluationData ->
+                var drawableId = R.drawable.ic_location_on_red
+                if (actual) {
+                    drawableId = R.drawable.ic_location_on_yellow
 
-                if (positionEvaluationData.tsArrival == 0L) {
-                    actual = false
-                } else if (positionEvaluationData.tsDepature == 0L) {
-                    actual = false
-                    drawableId = R.drawable.ic_location_on_green
-                } else {
-                    drawableId = R.drawable.ic_location_on_green
+                    if (positionEvaluationData.tsArrival == 0L) {
+                        actual = false
+                    } else if (positionEvaluationData.tsDepature == 0L) {
+                        actual = false
+                        drawableId = R.drawable.ic_location_on_green
+                    } else {
+                        drawableId = R.drawable.ic_location_on_green
+                    }
                 }
+
+                listOfMarker.add(
+                        map!!.addMarker(
+                                getRouteLocationMarkerOptions(
+                                        positionEvaluationData.latLng, "" + (++i), drawableId)))
             }
 
-            listOfMarker.add(
-                    map.addMarker(
-                            getRouteLocationMarkerOptions(
-                                    positionEvaluationData.latLng, "" + (++i), drawableId)))
+            clRouteControl.visibility = if (route.size == 0) View.INVISIBLE else View.VISIBLE
+
         }
-
-        clRouteControl.visibility = if (route.size == 0) View.INVISIBLE else View.VISIBLE
-
-
     }
     private fun getRouteLocationMarkerOptions(latLng: LatLng, label: String, drawableId: Int) : MarkerOptions {
         val rActivity = requireActivity()
@@ -165,7 +168,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
         polyline?.remove()
         listOfCircles.forEach { it.remove() }
         listOfCircles.clear()
-        if (!locations.isEmpty()) {
+        if (locations.isNotEmpty() && map != null) {
 
             if (showRoute) {
                 val latLngs: List<LatLng> = locations.map { LatLng(it.latitude, it.longitude) }
@@ -174,7 +177,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
                 polylineOptions.width(3f)
                 polylineOptions.color(Color.BLUE)
                 polylineOptions.geodesic(true)
-                polyline = map.addPolyline(polylineOptions)
+                polyline = map!!.addPolyline(polylineOptions)
             }
 
             locations.forEach {
@@ -206,12 +209,12 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
                     }
                 }
                 circleOptions.center(LatLng(it.latitude, it.longitude))
-                listOfCircles.add(map.addCircle(circleOptions))
+                listOfCircles.add(map!!.addCircle(circleOptions))
 
                 if (showAccuracy) {
                     accuracyCircleOptions.center(LatLng(it.latitude, it.longitude))
                     accuracyCircleOptions.radius(it.accuracy.toDouble())
-                    listOfCircles.add(map.addCircle(accuracyCircleOptions))
+                    listOfCircles.add(map!!.addCircle(accuracyCircleOptions))
 
                 }
             }
@@ -222,7 +225,7 @@ class GoogleMapsFragment : Fragment(), OnMapReadyCallback, OnCameraMoveStartedLi
             if (follow && !animationInProgress) {
                 val lastLocation = locations.last();
                 animationInProgress = true
-                map.animateCamera(
+                map!!.animateCamera(
                         CameraUpdateFactory.newLatLngZoom(
                                 LatLng(lastLocation.latitude, lastLocation.longitude),
                                 zoomFactor

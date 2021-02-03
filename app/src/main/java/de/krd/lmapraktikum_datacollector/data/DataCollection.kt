@@ -27,29 +27,33 @@ class DataCollection {
 
         val jsonObject = JSONObject(json)
 
+        val locationsList = mutableListOf<LocationData>()
         val jsonLocations = jsonObject.getJSONArray("locations")
         for (i in 0 until jsonLocations.length()) {
             val jsonLocation = jsonLocations.getJSONObject(i)
 
-            val location = gson.fromJson(jsonLocation.toString(), LocationData::class.java)
-            locations.add(location)
+            locationsList.add(gson.fromJson(jsonLocation.toString(), LocationData::class.java))
         }
 
+        locations.addAll(locationsList)
+
+        val sensorEventsList = mutableListOf<SensorData>()
         val jsonSensorEvents = jsonObject.getJSONArray("sensor_events")
         for (i in 0 until jsonSensorEvents.length()) {
             val jsonSensorEvent = jsonSensorEvents.getJSONObject(i)
 
-            val sensorData = gson.fromJson(jsonSensorEvent.toString(), SensorData::class.java)
-            sensorEvents.add(sensorData)
+            sensorEventsList.add(gson.fromJson(jsonSensorEvent.toString(), SensorData::class.java))
         }
+        sensorEvents.addAll(sensorEventsList)
 
+        val positionEvaluationDataList = mutableListOf<PositionEvaluationData>()
         val jsonPositionEvaluationData = jsonObject.getJSONArray("position_evaluation_data")
         for (i in 0 until jsonPositionEvaluationData.length()) {
             val jsonPositionEvaluation = jsonPositionEvaluationData.getJSONObject(i)
 
-            val routeData = gson.fromJson(jsonPositionEvaluation.toString(), PositionEvaluationData::class.java)
-            route.add(routeData)
+            positionEvaluationDataList.add(gson.fromJson(jsonPositionEvaluation.toString(), PositionEvaluationData::class.java))
         }
+        route.addAll(positionEvaluationDataList)
     }
 
     fun getJSON(): String {
@@ -84,6 +88,7 @@ class DataCollection {
         val parser = factory.newPullParser()
         parser.setInput(StringReader(string))
         var eventType = parser.eventType
+        val positionEvaluationDataList = mutableListOf<PositionEvaluationData>()
 
         while (eventType != XmlPullParser.END_DOCUMENT) {
             val tagName = parser.name
@@ -93,9 +98,7 @@ class DataCollection {
                         val latitude = parser.getAttributeValue(0).toDouble()
                         val longitude = parser.getAttributeValue(1).toDouble()
 
-                        val wayPoint = PositionEvaluationData(LatLng(latitude, longitude), 0L, 0L)
-                        route.add(wayPoint)
-                        Log.i("Waypoint", ""+wayPoint)
+                        positionEvaluationDataList.add(PositionEvaluationData(LatLng(latitude, longitude), 0L, 0L))
                     }
                 } catch (e: Exception) {
                     Log.e("Fehler", "Parsen nicht möglich")
@@ -103,5 +106,6 @@ class DataCollection {
             }
             eventType = parser.next()
         }
+        route.addAll(positionEvaluationDataList)
     }
 }
